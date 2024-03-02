@@ -10,7 +10,8 @@ export default function NavBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-            {/* <MenuButton to="asl" /> */}
+            <MenuButton to="Intro" />
+            <MenuButton to="Errors" />
         </Toolbar>
       </AppBar>
     </Box>

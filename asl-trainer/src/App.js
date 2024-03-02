@@ -8,10 +8,14 @@ import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import React from "react"
 import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
-import NavBar from "./NavBar" 
 import { useStopwatch } from 'react-timer-hook';
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
+import { Typography } from '@mui/material';
+
+
+import NavBar from "./NavBar" 
+import Clips from "./Clips" 
 
 /* 
 
@@ -91,12 +95,24 @@ export default function App() {
         <NavBar />
         <Container maxWidth="md" sx={{pt: 2}}>
           <Routes>
-            <Route path="/" element={<Deck cards={aslCards} startTime={new Date()} />} />
+            <Route path="/intro" element={<Intro />} />
+            <Route path="/errors" element={<Deck cards={aslCards} startTime={new Date()} />} />
           </Routes>
         </Container>
       </Router>    
     </>
   );
+}
+
+function Intro(){
+  return <>
+    <Typography variant="h3">Introduction</Typography> 
+    <ReactPlayer
+      url={ Clips.introduction }
+      controls={true}
+    />
+    
+  </>
 }
 
 
