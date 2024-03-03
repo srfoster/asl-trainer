@@ -32,24 +32,24 @@ SC - Sign choice
 
 let aslCards = [
   {
-    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what.incorrect.mp4',
-    correctClip: '/clips/error-game/hello-your-name-what.correct.mp4',
+    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
+    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
     type: "POA",
     english: "Hello, what's your name?",
     options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
     correctAnswer: 5,
   },
   {
-    clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks.incorrect.mp4',
-    correctClip: '/clips/error-game/i-buy-coffee-starbucks.correct.mp4',
+    clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
+    correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
     type: "POA",
     english: "I buy coffee at Starbucks",
     options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
     correctAnswer: 2,
   },
   {
-    clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry.incorrect.mp4',
-    correctClip: '/clips/error-game/he-will-go-ferry.correct.mp4',
+    clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-incorrect.mp4',
+    correctClip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-correct.mp4',
     type: "POA",
     english: "He will take the ferry",
     options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
@@ -67,6 +67,10 @@ function POACard(props){
         {props.card.english}
         <ReactPlayer
           url={ props.card.clip }
+          controls={true}
+        />
+        <ReactPlayer
+          url={ props.card.correctClip }
           controls={true}
         />
       </CardContent>
