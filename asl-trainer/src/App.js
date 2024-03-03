@@ -32,7 +32,7 @@ SC - Sign choice
 
 let aslCards = [
   {
-    clip: '/clips/error-game/hello-your-name-what.incorrect.mp4',
+    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what.incorrect.mp4',
     correctClip: '/clips/error-game/hello-your-name-what.correct.mp4',
     type: "POA",
     english: "Hello, what's your name?",
@@ -40,7 +40,7 @@ let aslCards = [
     correctAnswer: 5,
   },
   {
-    clip: '/clips/error-game/i-buy-coffee-starbucks.incorrect.mp4',
+    clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks.incorrect.mp4',
     correctClip: '/clips/error-game/i-buy-coffee-starbucks.correct.mp4',
     type: "POA",
     english: "I buy coffee at Starbucks",
@@ -48,7 +48,7 @@ let aslCards = [
     correctAnswer: 2,
   },
   {
-    clip: '/clips/error-game/he-will-go-ferry.incorrect.mp4',
+    clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry.incorrect.mp4',
     correctClip: '/clips/error-game/he-will-go-ferry.correct.mp4',
     type: "POA",
     english: "He will take the ferry",
