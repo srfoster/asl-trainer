@@ -12,31 +12,15 @@ import { useStopwatch } from 'react-timer-hook';
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import { Stack, Typography } from '@mui/material';
-import Slide from '@mui/material/Slide';
 import Fade from '@mui/material/Fade';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-
-
-
 import NavBar from "./NavBar" 
 import Clips from "./Clips" 
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-/* 
-
-P - Palm orientation
-L - Location
-HS - Handshape
-M - Movement
-SS - Sentence Structure
-NMM - Non-manual markers
-SC - Sign choice
-
-*/
-
+let errorInstructions = {
+  text: "The videos below contain mistakes!  Click the <b>FIRST</b> gloss word that doesn't match the video.",
+  type: "PlainTextFeedItem"
+}
 
 let aslCards = [
   {
@@ -44,14 +28,65 @@ let aslCards = [
     clipGloss: "HELLO WHAT YOU NAME?",
     correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
     correctClipGloss: "HELLO YOU NAME WHAT?",
-    type: "POA",
     english: "Hello, what's your name?",
     options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
     correctAnswer: {type: "SS", word: "YOU"},
     hint: "...",
     explanation: "TODO: Explanation here",
+    type: "ErrorGameFeedItem" 
+  },
+  {
+    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
+    clipGloss: "HELLO WHAT YOU NAME?",
+    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
+    correctClipGloss: "HELLO YOU NAME WHAT?",
+    english: "Hello, what's your name?",
+    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
+    correctAnswer: {type: "SS", word: "YOU"},
+    hint: "...",
+    explanation: "TODO: Explanation here",
+    type: "ErrorGameFeedItem" 
+  },
+  {
+    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
+    clipGloss: "HELLO WHAT YOU NAME?",
+    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
+    correctClipGloss: "HELLO YOU NAME WHAT?",
+    english: "Hello, what's your name?",
+    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
+    correctAnswer: {type: "SS", word: "YOU"},
+    hint: "...",
+    explanation: "TODO: Explanation here",
+    type: "ErrorGameFeedItem" 
     
   },
+  {
+    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
+    clipGloss: "HELLO WHAT YOU NAME?",
+    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
+    correctClipGloss: "HELLO YOU NAME WHAT?",
+    english: "Hello, what's your name?",
+    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
+    correctAnswer: {type: "SS", word: "YOU"},
+    hint: "...",
+    explanation: "TODO: Explanation here",
+    type: "ErrorGameFeedItem" 
+    
+  },
+  {
+    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
+    clipGloss: "HELLO WHAT YOU NAME?",
+    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
+    correctClipGloss: "HELLO YOU NAME WHAT?",
+    english: "Hello, what's your name?",
+    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
+    correctAnswer: {type: "SS", word: "YOU"},
+    hint: "...",
+    explanation: "TODO: Explanation here",
+    type: "ErrorGameFeedItem" 
+    
+  },
+  /*
   {
     clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
     correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
@@ -68,23 +103,22 @@ let aslCards = [
     options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
     correctAnswer: "SC",
   },
+  */
 ]
 
-function unabbreviate(abbr){
-  let abbreviations = {
-    "PO": "Palm Orientation",
-    "L": "Location",
-    "HS": "Handshape",
-    "M": "Movement",
-    "NMM": "Non-manual markers",
-    "SS": "Sentence Structure",
-    "SC": "Sign choice",
-  }
-
-  return abbreviations[abbr]
+function PlainTextFeedItem(props){
+  return <Card sx={{m: 1}} >
+    <CardContent>
+      <Typography
+        variant="h6"
+        sx={{p: 1}}
+        dangerouslySetInnerHTML={{__html: props.card.text}}>
+        </Typography>
+    </CardContent>
+  </Card>
 }
 
-function POACard(props){
+function ErrorGameFeedItem(props){
   return !props.gotItRight ?  
           <div><POACardDefault {...props} /> </div> :
           <Fade in={true} timeout={1000}>
@@ -102,15 +136,8 @@ function POACardDefault(props){
     }
   }
 
-  /*
-  let errorOptionToErrorSelection = (x,i)=>{
-    //return <FormControlLabel value={x} control={<Radio />} label={unabbreviate(x)} />
-    return <Button onClick={()=>{setTypeSelection(x)}} sx={{m: 1}} variant={typeSelection !== x ? "contained" : "outlined"}>{unabbreviate(x)}</Button>
-  }
-  */
-
   return (
-    <Card style={{boxShadow: "none"}}>
+    <Card sx={{m: 1}}>
       <CardContent>
         <Stack alignItems={"center"}>
           <Typography variant="h4" sx={{p: 1}}>
@@ -128,21 +155,8 @@ function POACardDefault(props){
             </CardContent>
           </Card>
           <Typography variant="h6" sx={{p: 1}}>
-              The video contains mistakes.  The correct ASL gloss for the English sentence  is shown below.  Click the <b>FIRST</b> gloss word that doesn't match the video.
             </Typography>
             <ClickableGloss onClick={setWordSelection} gloss={props.card.correctClipGloss} />
-            {/*
-            <Stack direction="row" spacing={2} sx={{mt: 2}}>
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Sign parameter errors</FormLabel>
-                  {props.card.options.slice(0,5).map(errorOptionToErrorSelection)}
-              </FormControl>
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">Other types of errors</FormLabel>
-                  {props.card.options.slice(5,7).map(errorOptionToErrorSelection)}
-              </FormControl>
-            </Stack>
-  */}
         </Stack>
       </CardContent>
       <CardActions style={{justifyContent: "flex-end"}}>
@@ -196,12 +210,6 @@ function POACardCorrect(props){
   );
 }
 
-function BasicCard(props) {
-  return <>
-    <POACard {...props} />
-  </>
-}
-
 
 export default function App() {
   return (
@@ -210,8 +218,7 @@ export default function App() {
         <NavBar />
         <Container maxWidth="md" sx={{pt: 2}}>
           <Routes>
-            <Route path="/intro" element={<Intro />} />
-            <Route path="/errors" element={<Deck cards={aslCards} startTime={new Date()} />} />
+            <Route path="/" element={<Feed />} />
           </Routes>
         </Container>
       </Router>    
@@ -219,88 +226,52 @@ export default function App() {
   );
 }
 
-function Intro(){
-  return <>
-    <Typography variant="h3">Introduction</Typography> 
-    <ReactPlayer
-      url={ Clips.introduction }
-      controls={true}
-    />
-    
-  </>
-}
+function Feed(){
+  let [gotItRight, setGotItRight] = React.useState(false)
 
+  let cardify = (c)=>{
+    let F = eval(c.type)
 
-function Deck(props){
-  // Make a state variable to store the current card's index
-  const [cardIndex, setCardIndex] = React.useState(0)
-  const [gotItRight, setGotItRight] = React.useState(false)
-
-  React.useEffect(()=>{
-    setCardIndex(0)
-  },
-  [props.startTime])
-
-  const prev = ()=>{
-    if(cardIndex - 1 >= 0){
-      setCardIndex(cardIndex - 1)
-      setGotItRight(false)
-    }
+    return <F card={c}
+              setGotItRight={setGotItRight}
+              gotItRight={gotItRight}
+        />
   }
 
-  const next = ()=>{
-    if(cardIndex + 1 < props.cards.length){
-      setCardIndex(cardIndex + 1)
-      setGotItRight(false)
-    }
+  let [items, setItems] = React.useState( [errorInstructions].concat(aslCards))
+
+  let fetchData = ()=>{
+    setItems(items.concat(aslCards))
   }
 
-  return <>
-    {/* <Gamification startTime={props.startTime} currentCorrect={currentCorrect} /> */}
-    {props.cards[cardIndex] && <BasicCard card={props.cards[cardIndex]}
-                    setGotItRight={setGotItRight}
-                    gotItRight={gotItRight}
-                    setCardIndex={setCardIndex}
-                    cardIndex={cardIndex}
-        />}
-     <Button onClick={() => { prev() }} variant="outlined">Prev Card</Button>
-     <Button onClick={() => { next()}} variant="outlined">Next Card</Button>
-  </>
-}
+  let refresh = ()=>{
+    console.log("refreshing")
+  }
 
-function Gamification(props){
-  const {
-    totalSeconds,
-    seconds,
-    minutes,
-    hours,
-    days,
-    isRunning,
-    start,
-    pause,
-    reset,
-  } = useStopwatch({ autoStart: true });
-
-  React.useEffect(()=>{
-    reset() 
-  },
-  [props.startTime])
-
-
-  return (
-    <div style={{textAlign: 'center'}}>
-        {props.currentCorrect && <MyConfetti />}
-        {props.currentCorrect && "You got it!"}
-        <div>{seconds}</div>
-    </div>
-  );
- 
-}
-
-function AllCards(props) {
-  return props.cards.map((x) => {
-    return <BasicCard card={x} />
-  })
+//  return items.map(cardify)
+  return <InfiniteScroll
+      dataLength={items.length} 
+      next={fetchData}
+      hasMore={true}
+      loader={<h4>Loading...</h4>}
+      endMessage={
+        <p style={{ textAlign: 'center' }}>
+          <b>Yay! You have seen it all</b>
+        </p>
+      }
+      // below props only if you need pull down functionality
+      refreshFunction={refresh}
+      pullDownToRefresh
+      pullDownToRefreshThreshold={50}
+      pullDownToRefreshContent={
+        <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+      }
+      releaseToRefreshContent={
+        <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+      }
+    >
+      {items.map(cardify)}
+    </InfiniteScroll>
 }
 
 
