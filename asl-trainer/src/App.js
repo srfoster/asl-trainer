@@ -14,6 +14,11 @@ import Confetti from 'react-confetti'
 import { Stack, Typography } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import Fade from '@mui/material/Fade';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 
 
@@ -36,13 +41,13 @@ SC - Sign choice
 let aslCards = [
   {
     clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    clipGloss: "...",
+    clipGloss: "HELLO WHAT YOU NAME?",
     correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    correctClipGloss: "...",
+    correctClipGloss: "HELLO YOU NAME WHAT?",
     type: "POA",
     english: "Hello, what's your name?",
     options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: "SS",
+    correctAnswer: {type: "SS", word: "YOU"},
     hint: "...",
     explanation: "TODO: Explanation here",
     
@@ -80,113 +85,112 @@ function unabbreviate(abbr){
 }
 
 function POACard(props){
-  return !props.gotItRight ?  <div><POACardDefault {...props} /> </div> :
+  return !props.gotItRight ?  
+          <div><POACardDefault {...props} /> </div> :
           <Fade in={true} timeout={1000}>
             <div><POACardCorrect {...props} /></div>
           </Fade>
 }
 
 function POACardDefault(props){
-  let errorOptionToErrorSelection = (x,i)=>{
-    return <Button onClick={()=>{
-      if(x === props.card.correctAnswer){
-        props.setGotItRight(true)
-      }
-    }}>{unabbreviate(x)}</Button>
+  let [wordSelection, setWordSelection] = React.useState(null)
+  //let [typeSelection, setTypeSelection] = React.useState(null)
+
+  let checkAnswer = ()=>{
+    if(/*typeSelection === props.card.correctAnswer["type"] && */ wordSelection === props.card.correctAnswer["word"]){
+      props.setGotItRight(true)
+    }
   }
 
-  return (
-    <Card>
-      <CardContent>
-        <center>
-          <Typography variant="h4" sx={{p: 1}}>
-            {!props.gotItRight ? "What's wrong with this sentence?" : "Correct!" }
-          </Typography>
-        </center>
-        {!props.gotItRight ? 
-          <ReactPlayer
-            url={ props.card.clip }
-            controls={true}
-            width="100%"
-          /> :
-          <>
-            <center>
-              <Typography variant="p" sx={{p: 1}}>
-                This is how you should sign it
-              </Typography>
-            </center>
-            <ReactPlayer
-              url={ props.card.correctClip }
-              controls={true}
-              width="100%"
-            />
-          </>
-        }
+  /*
+  let errorOptionToErrorSelection = (x,i)=>{
+    //return <FormControlLabel value={x} control={<Radio />} label={unabbreviate(x)} />
+    return <Button onClick={()=>{setTypeSelection(x)}} sx={{m: 1}} variant={typeSelection !== x ? "contained" : "outlined"}>{unabbreviate(x)}</Button>
+  }
+  */
 
-        <center>
-        <Typography variant="h6" sx={{p: 1}}>
-          English: {props.card.english}
-        </Typography>
-        {props.gotItRight && <Typography variant="h6" sx={{p: 1}}>
-          ASL Gloss: {props.card.correctClipGloss}
-        </Typography>}
-        </center>
-        {/* <ReactPlayer
-          url={ props.card.correctClip }
-          controls={true}
-        /> */}
-      </CardContent>
-      <CardActions>
-        <Stack direction="row">
-          <Stack spacing={2}>
-            {props.card.options.slice(0,5).map(errorOptionToErrorSelection)}
-          </Stack>
-          <Stack spacing={2}>
-            {props.card.options.slice(5,7).map(errorOptionToErrorSelection)}
-          </Stack>
-          <div>
-            {props.gotItRight && props.card.explanation}
-          </div>
+  return (
+    <Card style={{boxShadow: "none"}}>
+      <CardContent>
+        <Stack alignItems={"center"}>
+          <Typography variant="h4" sx={{p: 1}}>
+            What's wrong with this video?
+          </Typography>
+          <Card>
+            <CardContent style={{paddingBottom: 5}}>
+              <ReactPlayer
+                url={ props.card.clip }
+                controls={true}
+              />
+              <Typography variant="h6" sx={{mt: 1, p: 0, textAlign: "center"}}>
+                English: {props.card.english}
+              </Typography>
+            </CardContent>
+          </Card>
+          <Typography variant="h6" sx={{p: 1}}>
+              The video contains mistakes.  The correct ASL gloss for the English sentence  is shown below.  Click the <b>FIRST</b> gloss word that doesn't match the video.
+            </Typography>
+            <ClickableGloss onClick={setWordSelection} gloss={props.card.correctClipGloss} />
+            {/*
+            <Stack direction="row" spacing={2} sx={{mt: 2}}>
+              <FormControl>
+                <FormLabel id="demo-radio-buttons-group-label">Sign parameter errors</FormLabel>
+                  {props.card.options.slice(0,5).map(errorOptionToErrorSelection)}
+              </FormControl>
+              <FormControl>
+                <FormLabel id="demo-radio-buttons-group-label">Other types of errors</FormLabel>
+                  {props.card.options.slice(5,7).map(errorOptionToErrorSelection)}
+              </FormControl>
+            </Stack>
+  */}
         </Stack>
+      </CardContent>
+      <CardActions style={{justifyContent: "flex-end"}}>
+        {wordSelection && <Button onClick={checkAnswer} variant="contained" color="secondary">Submit</Button>}
       </CardActions>
     </Card>
   );
+}
+
+function ClickableGloss(props){
+  let [wordSelection, setWordSelection] = React.useState(null)
+
+  return <Stack direction="row" spacing={2}>{props.gloss.split(" ").map((x,i)=>{
+     return <Button 
+       variant={x !== wordSelection ? "contained" : "outlined"}
+       key={i} onClick={() => {
+        setWordSelection(x)
+        props.onClick(x)
+      }}>{x}</Button>
+  })}</Stack>
 }
 
 function POACardCorrect(props){
   return (
     <Card>
       <CardContent>
-        <center>
+        <Stack alignItems={"center"}>
           <Typography variant="h4" sx={{p: 1}}>
             Correct!
           </Typography>
-        </center>
-            <center>
-              <Typography variant="p" sx={{p: 1}}>
-                This is how you should sign it
-              </Typography>
-            </center>
-            <ReactPlayer
-              url={ props.card.correctClip }
-              controls={true}
-              width="100%"
-            />
-        <center>
-        <Typography variant="h6" sx={{p: 1}}>
-          English: {props.card.english}
-        </Typography>
-        {props.gotItRight && <Typography variant="h6" sx={{p: 1}}>
-          ASL Gloss: {props.card.correctClipGloss}
-        </Typography>}
-        </center>
+          <Typography variant="p" sx={{p: 1}}>
+            This is how you should sign it
+          </Typography>
+          <ReactPlayer
+            url={ props.card.correctClip }
+            controls={true}
+          />
+          <Typography variant="h6" sx={{p: 1}}>
+            English: {props.card.english}
+          </Typography>
+          {props.gotItRight && <Typography variant="h6" sx={{p: 1}}>
+            ASL Gloss: {props.card.correctClipGloss}
+          </Typography>}
+          {props.gotItRight && props.card.explanation}
+        </Stack>
       </CardContent>
       <CardActions>
-        <Stack direction="row">
-          <div>
-            {props.gotItRight && props.card.explanation}
-          </div>
-        </Stack>
+        <Button onClick={()=>{props.setGotItRight(false)}}>Redo?</Button>
       </CardActions>
     </Card>
   );
