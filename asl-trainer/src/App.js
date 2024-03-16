@@ -22,6 +22,12 @@ let errorInstructions = {
   type: "PlainTextFeedItem"
 }
 
+let settingsCard = {
+  text: "You've been scrolling for a while!  Would you like to change your feed settings?",
+  options: ["Error Game", "Basic Vocab", "Fingerspelling"],
+  type: "SettingsFeedItem"
+}
+
 let aslCards = [
   {
     clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
@@ -114,6 +120,25 @@ function PlainTextFeedItem(props){
         sx={{p: 1}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
         </Typography>
+    </CardContent>
+  </Card>
+}
+
+function SettingsFeedItem(props){
+  let [selectedSettings, setSelectedSettings] = React.useState([])
+
+  return <Card sx={{m: 1}} >
+    <CardContent>
+      <Typography
+        variant="h6"
+        sx={{p: 1}}
+        dangerouslySetInnerHTML={{__html: props.card.text}}>
+        </Typography>
+        <Stack direction="row" spacing={2} justifyContent="center">
+        {props.card.options.map((x,i)=>{
+          return <Button variant={selectedSettings.includes(x) ? "outlined" : "contained"} key={i} onClick={()=>{setSelectedSettings(selectedSettings.concat(x))}}>{x}</Button>
+        })}
+        </Stack>
     </CardContent>
   </Card>
 }
@@ -241,7 +266,7 @@ function Feed(){
   let [items, setItems] = React.useState( [errorInstructions].concat(aslCards))
 
   let fetchData = ()=>{
-    setItems(items.concat(aslCards))
+    setItems(items.concat([settingsCard]).concat(aslCards))
   }
 
   let refresh = ()=>{
