@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import Slider from '@mui/material/Slider';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
+import CardMedia from '@mui/material/CardMedia';
+import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import React from "react"
@@ -16,6 +18,17 @@ import Fade from '@mui/material/Fade';
 import NavBar from "./NavBar" 
 import Clips from "./Clips" 
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import HeartIcon from '@mui/icons-material/FavoriteBorder';
+import CommentIcon from '@mui/icons-material/Comment';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 
 let errorInstructions = {
   text: "The videos below contain mistakes!  Click the <b>FIRST</b> gloss word that doesn't match the video.",
@@ -113,7 +126,10 @@ let aslCards = [
 ]
 
 function PlainTextFeedItem(props){
-  return <Card sx={{m: 1}} >
+  return <FeedCard>
+    <CardHeader title="Instructions">
+
+    </CardHeader>
     <CardContent>
       <Typography
         variant="h6"
@@ -121,13 +137,13 @@ function PlainTextFeedItem(props){
         dangerouslySetInnerHTML={{__html: props.card.text}}>
         </Typography>
     </CardContent>
-  </Card>
+  </FeedCard>
 }
 
 function SettingsFeedItem(props){
   let [selectedSettings, setSelectedSettings] = React.useState([])
 
-  return <Card sx={{m: 1}} >
+  return <FeedCard>
     <CardContent>
       <Typography
         variant="h6"
@@ -140,7 +156,7 @@ function SettingsFeedItem(props){
         })}
         </Stack>
     </CardContent>
-  </Card>
+  </FeedCard>
 }
 
 function ErrorGameFeedItem(props){
@@ -162,18 +178,27 @@ function POACardDefault(props){
   }
 
   return (
-    <Card sx={{m: 1}}>
+    <FeedCard>
+      <CardMedia style={{height: "80vh", position: "relative"}}>
+        <ReactPlayer
+          url={ props.card.clip }
+          controls={true}
+          width="100%"
+          height="100%"
+        />
+        <Stack style={{position: "absolute", bottom: 70, right: 0}}>
+          <IconButton aria-label="delete">
+            <HeartIcon />
+          </IconButton>
+          <IconButton aria-label="comment">
+            <CommentIcon />
+          </IconButton>
+        </Stack>
+      </CardMedia>
       <CardContent>
         <Stack alignItems={"center"}>
-          <Typography variant="h4" sx={{p: 1}}>
-            What's wrong with this video?
-          </Typography>
           <Card>
             <CardContent style={{paddingBottom: 5}}>
-              <ReactPlayer
-                url={ props.card.clip }
-                controls={true}
-              />
               <Typography variant="h6" sx={{mt: 1, p: 0, textAlign: "center"}}>
                 English: {props.card.english}
               </Typography>
@@ -187,8 +212,14 @@ function POACardDefault(props){
       <CardActions style={{justifyContent: "flex-end"}}>
         {wordSelection && <Button onClick={checkAnswer} variant="contained" color="secondary">Submit</Button>}
       </CardActions>
-    </Card>
+    </FeedCard>
   );
+}
+
+function FeedCard(props){
+  return <Card sx={{mb: 1}} {...props}>
+    {props.children}
+  </Card>
 }
 
 function ClickableGloss(props){
@@ -239,14 +270,16 @@ function POACardCorrect(props){
 export default function App() {
   return (
     <>
-      <Router>
-        <NavBar />
-        <Container maxWidth="md" sx={{pt: 2}}>
-          <Routes>
-            <Route path="/" element={<Feed />} />
-          </Routes>
-        </Container>
-      </Router>    
+      <ThemeProvider theme={darkTheme}>
+        <Router>
+          <Container maxWidth="md" style={{padding: 1}}>
+            <Routes>
+              <Route path="/" element={<Feed />} />
+            </Routes>
+          </Container>
+          <NavBar />
+        </Router>    
+      </ThemeProvider>
     </>
   );
 }
@@ -289,10 +322,10 @@ function Feed(){
       pullDownToRefresh
       pullDownToRefreshThreshold={50}
       pullDownToRefreshContent={
-        <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+        <h3 style={{ textAlign: 'center', color: "white" }}>&#8595; Pull down to refresh</h3>
       }
       releaseToRefreshContent={
-        <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+        <h3 style={{ textAlign: 'center', color: "white" }}>&#8593; Release to refresh</h3>
       }
     >
       {items.map(cardify)}

@@ -8,10 +8,10 @@ import {Link} from "react-router-dom"
 export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
         <Toolbar>
-            <MenuButton to="Intro" />
-            <MenuButton to="Errors" />
+            <MenuButton to="Feed" />
+            <MenuButton to="Profile" />
         </Toolbar>
       </AppBar>
     </Box>
