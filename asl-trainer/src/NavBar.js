@@ -1,25 +1,32 @@
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import {Link} from "react-router-dom"
+import LearnIcon from '@mui/icons-material/AutoStories';
+import TimedIcon from '@mui/icons-material/ToggleOff';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ProfileIcon from '@mui/icons-material/AccountCircle';
 
 export default function NavBar() {
   return (
-    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0 }}>
-        <Toolbar>
-            <MenuButton to="Feed" />
-            <MenuButton to="Profile" />
-        </Toolbar>
+          <Stack direction="row" alignItems={"center"} justifyContent="center" spacing={2} >
+            <IconButton>
+              {/* <Link style={{color: "black"}} to={"/"+props.to}>{props.to}</Link> */}
+              <LearnIcon />
+            </IconButton>
+            <IconButton>
+              <TimedIcon />
+            </IconButton>
+            <IconButton>
+              <SettingsIcon />
+            </IconButton>
+            <IconButton>
+              <Avatar alt="Cindy Baker" src="https://mui.com/static/images/avatar/1.jpg" />
+            </IconButton>
+          </Stack>
       </AppBar>
-    </Box>
   );
-}
-
-function MenuButton(props) {
-  return <Button variant="contained" sx={{ ml: 1, color: "white", backgroundColor: "white" }}>
-        <Link style={{color: "black"}} to={"/"+props.to}>{props.to}</Link>
-    </Button>
 }

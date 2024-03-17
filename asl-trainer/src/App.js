@@ -1,5 +1,6 @@
 import './App.css';
 import ReactPlayer from 'react-player'
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Slider from '@mui/material/Slider';
 import Card from '@mui/material/Card';
@@ -22,6 +23,11 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import HeartIcon from '@mui/icons-material/FavoriteBorder';
 import CommentIcon from '@mui/icons-material/Comment';
+import SpeedIcon from '@mui/icons-material/Speed';
+import SchoolIcon from '@mui/icons-material/School';
+
+import { PieChart } from '@mui/x-charts/PieChart';
+
 
 const darkTheme = createTheme({
   palette: {
@@ -30,9 +36,22 @@ const darkTheme = createTheme({
 });
 
 
-let errorInstructions = {
-  text: "The videos below contain mistakes!  Click the <b>FIRST</b> gloss word that doesn't match the video.",
-  type: "PlainTextFeedItem"
+let errorInstructions = "The videos below contain mistakes!  Click the <b>FIRST</b> gloss word that doesn't match the video."
+
+let fingerspellingInstructions = "The videos below involve fingerspelling!  Click the word being spelled."
+
+let instructions = (text)=>{
+  return {
+    text: text, 
+    type: "PlainTextFeedItem"
+  }
+}
+
+let stats = (data)=>{
+  return {
+    data: data, 
+    type: "StatsFeedItem"
+  }
 }
 
 let settingsCard = {
@@ -125,6 +144,29 @@ let aslCards = [
   */
 ]
 
+function StatsFeedItem(props){
+  return <FeedCard>
+    <CardHeader title="You're doing great!">
+    </CardHeader>
+    <CardContent>
+      <PieChart
+        colors={["lime", "cyan", "red"]}
+        series={[
+          {
+            data: [
+              { id: 0, value: 10, label: 'Right' },
+              { id: 1, value: 15, label: 'Repeat' },
+              { id: 2, value: 20, label: 'Wrong' },
+            ],
+          },
+        ]}
+        width={350}
+        height={200}
+      />
+    </CardContent>
+  </FeedCard>
+}
+
 function PlainTextFeedItem(props){
   return <FeedCard>
     <CardHeader title="Instructions">
@@ -180,30 +222,24 @@ function POACardDefault(props){
   return (
     <FeedCard>
       <CardMedia style={{height: "80vh", position: "relative"}}>
-        <ReactPlayer
-          url={ props.card.clip }
-          controls={true}
-          width="100%"
-          height="100%"
-        />
-        <Stack style={{position: "absolute", bottom: 70, right: 0}}>
+        <Video url={props.card.clip} />
+        <Stack style={{position: "absolute", bottom: 10, right: 0}}>
           <IconButton aria-label="delete">
             <HeartIcon />
           </IconButton>
           <IconButton aria-label="comment">
             <CommentIcon />
           </IconButton>
+          <IconButton aria-label="comment">
+            <SpeedIcon />
+          </IconButton>
+          <IconButton aria-label="comment">
+            <SchoolIcon />
+          </IconButton>
         </Stack>
       </CardMedia>
       <CardContent>
         <Stack alignItems={"center"}>
-          <Card>
-            <CardContent style={{paddingBottom: 5}}>
-              <Typography variant="h6" sx={{mt: 1, p: 0, textAlign: "center"}}>
-                English: {props.card.english}
-              </Typography>
-            </CardContent>
-          </Card>
           <Typography variant="h6" sx={{p: 1}}>
             </Typography>
             <ClickableGloss onClick={setWordSelection} gloss={props.card.correctClipGloss} />
@@ -214,6 +250,32 @@ function POACardDefault(props){
       </CardActions>
     </FeedCard>
   );
+}
+
+function Video({url}){
+  let [playing, setPlaying] = React.useState(false)
+  let [progress, setProgress] = React.useState(0)
+
+  return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
+    <ReactPlayer
+            playing={playing}
+            loop={true}
+            url={ url}
+            controls={false}
+            width="100%"
+            height="100%"
+            onProgress={(p)=>{setProgress(p.played)}}
+          />
+      <div style={{position: "absolute", bottom: 10}} >
+        <Stack direction="row" alignItems={"center"} spacing={2}>
+          <Avatar src="https://mui.com/static/images/avatar/3.jpg" />
+          <Typography variant="h6">
+            Christine K
+          </Typography>
+        </Stack>
+      </div>
+      <div style={{width: (progress*100)+"%", height: 4, backgroundColor: "white", borderRadius: 10, position: "absolute", bottom: 0}}></div>
+  </div>
 }
 
 function FeedCard(props){
@@ -272,12 +334,12 @@ export default function App() {
     <>
       <ThemeProvider theme={darkTheme}>
         <Router>
+          <NavBar />
           <Container maxWidth="md" style={{padding: 1}}>
             <Routes>
               <Route path="/" element={<Feed />} />
             </Routes>
           </Container>
-          <NavBar />
         </Router>    
       </ThemeProvider>
     </>
@@ -296,10 +358,10 @@ function Feed(){
         />
   }
 
-  let [items, setItems] = React.useState( [errorInstructions].concat(aslCards))
+  let [items, setItems] = React.useState( [instructions(errorInstructions)].concat(aslCards))
 
   let fetchData = ()=>{
-    setItems(items.concat([settingsCard]).concat(aslCards))
+    setItems(items.concat([stats({}), instructions(fingerspellingInstructions)]).concat(aslCards))
   }
 
   let refresh = ()=>{
