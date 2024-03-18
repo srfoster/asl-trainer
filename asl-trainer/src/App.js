@@ -346,11 +346,20 @@ export default function App() {
   );
 }
 
+function stringToComponent(s){
+  return {
+    StatsFeedItem,
+    PlainTextFeedItem,
+    ErrorGameFeedItem,
+    SettingsFeedItem
+  }[s]
+}
+
 function Feed(){
   let [gotItRight, setGotItRight] = React.useState(false)
 
   let cardify = (c)=>{
-    let F = eval(c.type)
+    let F = stringToComponent(c.type)
 
     return <F card={c}
               setGotItRight={setGotItRight}
