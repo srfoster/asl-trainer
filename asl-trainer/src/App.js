@@ -68,14 +68,15 @@ function StatsFeedItem(props){
 function PlainTextFeedItem(props){
   return <FeedCard>
     <CardHeader title="Instructions">
-
     </CardHeader>
-    <CardContent>
+    <CardContent >
+      <div style={{height: "60vh"}}>
       <Typography
         variant="h6"
         sx={{p: 1}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
         </Typography>
+      </div>
     </CardContent>
   </FeedCard>
 }
