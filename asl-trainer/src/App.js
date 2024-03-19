@@ -2,7 +2,6 @@ import './App.css';
 import ReactPlayer from 'react-player'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import Slider from '@mui/material/Slider';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardMedia from '@mui/material/CardMedia';
@@ -11,13 +10,11 @@ import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
 import React from "react"
 import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
-import { useStopwatch } from 'react-timer-hook';
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import { Stack, Typography } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import NavBar from "./NavBar" 
-import Clips from "./Clips" 
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -28,6 +25,7 @@ import SchoolIcon from '@mui/icons-material/School';
 
 import { PieChart } from '@mui/x-charts/PieChart';
 
+import {aslItems} from "./feedItems"
 
 const darkTheme = createTheme({
   palette: {
@@ -36,16 +34,6 @@ const darkTheme = createTheme({
 });
 
 
-let errorInstructions = "The videos below contain mistakes!  Click the <b>FIRST</b> gloss word that doesn't match the video."
-
-let fingerspellingInstructions = "The videos below involve fingerspelling!  Click the word being spelled."
-
-let instructions = (text)=>{
-  return {
-    text: text, 
-    type: "PlainTextFeedItem"
-  }
-}
 
 let stats = (data)=>{
   return {
@@ -53,96 +41,6 @@ let stats = (data)=>{
     type: "StatsFeedItem"
   }
 }
-
-let settingsCard = {
-  text: "You've been scrolling for a while!  Would you like to change your feed settings?",
-  options: ["Error Game", "Basic Vocab", "Fingerspelling"],
-  type: "SettingsFeedItem"
-}
-
-let aslCards = [
-  {
-    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    clipGloss: "HELLO WHAT YOU NAME?",
-    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    correctClipGloss: "HELLO YOU NAME WHAT?",
-    english: "Hello, what's your name?",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: {type: "SS", word: "YOU"},
-    hint: "...",
-    explanation: "TODO: Explanation here",
-    type: "ErrorGameFeedItem" 
-  },
-  {
-    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    clipGloss: "HELLO WHAT YOU NAME?",
-    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    correctClipGloss: "HELLO YOU NAME WHAT?",
-    english: "Hello, what's your name?",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: {type: "SS", word: "YOU"},
-    hint: "...",
-    explanation: "TODO: Explanation here",
-    type: "ErrorGameFeedItem" 
-  },
-  {
-    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    clipGloss: "HELLO WHAT YOU NAME?",
-    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    correctClipGloss: "HELLO YOU NAME WHAT?",
-    english: "Hello, what's your name?",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: {type: "SS", word: "YOU"},
-    hint: "...",
-    explanation: "TODO: Explanation here",
-    type: "ErrorGameFeedItem" 
-    
-  },
-  {
-    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    clipGloss: "HELLO WHAT YOU NAME?",
-    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    correctClipGloss: "HELLO YOU NAME WHAT?",
-    english: "Hello, what's your name?",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: {type: "SS", word: "YOU"},
-    hint: "...",
-    explanation: "TODO: Explanation here",
-    type: "ErrorGameFeedItem" 
-    
-  },
-  {
-    clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    clipGloss: "HELLO WHAT YOU NAME?",
-    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    correctClipGloss: "HELLO YOU NAME WHAT?",
-    english: "Hello, what's your name?",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: {type: "SS", word: "YOU"},
-    hint: "...",
-    explanation: "TODO: Explanation here",
-    type: "ErrorGameFeedItem" 
-    
-  },
-  /*
-  {
-    clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
-    correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
-    type: "POA",
-    english: "I buy coffee at Starbucks",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: "HS",
-  },
-  {
-    clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-incorrect.mp4',
-    correctClip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-correct.mp4',
-    type: "POA",
-    english: "He will take the ferry",
-    options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: "SC",
-  },
-  */
-]
 
 function StatsFeedItem(props){
   return <FeedCard>
@@ -170,14 +68,15 @@ function StatsFeedItem(props){
 function PlainTextFeedItem(props){
   return <FeedCard>
     <CardHeader title="Instructions">
-
     </CardHeader>
-    <CardContent>
+    <CardContent >
+      <div style={{height: "60vh"}}>
       <Typography
         variant="h6"
         sx={{p: 1}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
         </Typography>
+      </div>
     </CardContent>
   </FeedCard>
 }
@@ -367,10 +266,10 @@ function Feed(){
         />
   }
 
-  let [items, setItems] = React.useState( [instructions(errorInstructions)].concat(aslCards))
+  let [items, setItems] = React.useState(aslItems.concat(stats({})))
 
   let fetchData = ()=>{
-    setItems(items.concat([stats({}), instructions(fingerspellingInstructions)]).concat(aslCards))
+    //setItems(items.concat([stats({})]))
   }
 
   let refresh = ()=>{
