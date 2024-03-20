@@ -101,25 +101,18 @@ function SettingsFeedItem(props){
 }
 
 function ErrorGameFeedItem(props){
-  return !props.gotItRight ?  
-          <div><POACardDefault {...props} /> </div> :
-          <Fade in={true} timeout={1000}>
-            <div><POACardCorrect {...props} /></div>
-          </Fade>
-}
-
-function POACardDefault(props){
   let [wordSelection, setWordSelection] = React.useState(null)
-  //let [typeSelection, setTypeSelection] = React.useState(null)
 
-  let checkAnswer = ()=>{
-    if(/*typeSelection === props.card.correctAnswer["type"] && */ wordSelection === props.card.correctAnswer["word"]){
-      props.setGotItRight(true)
-    }
-  }
+  let gotItRight = wordSelection === props.card.correctAnswer["word"]
+
+  if(gotItRight) console.log("got it right")
+
+  React.useEffect(()=>{
+    if(gotItRight) props.setGotItRight(true)
+  },[gotItRight])
 
   return (
-    <FeedCard>
+    <FeedCard gotItRight={gotItRight}>
       <CardMedia style={{height: "80vh", position: "relative"}}>
         <Video url={props.card.clip} />
         <Stack style={{position: "absolute", bottom: 10, right: 0}}>
@@ -144,12 +137,10 @@ function POACardDefault(props){
             <ClickableGloss onClick={setWordSelection} gloss={props.card.correctClipGloss} />
         </Stack>
       </CardContent>
-      <CardActions style={{justifyContent: "flex-end"}}>
-        {wordSelection && <Button onClick={checkAnswer} variant="contained" color="secondary">Submit</Button>}
-      </CardActions>
     </FeedCard>
   );
 }
+
 
 function Video({url}){
   let [playing, setPlaying] = React.useState(false)
@@ -178,7 +169,8 @@ function Video({url}){
 }
 
 function FeedCard(props){
-  return <Card sx={{mb: 1}} {...props}>
+  return <Card className={props.gotItRight ? "correct-card" : ""} sx={{mb: 1}} {...props}>
+    {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
 }
@@ -195,38 +187,6 @@ function ClickableGloss(props){
       }}>{x}</Button>
   })}</Stack>
 }
-
-function POACardCorrect(props){
-  return (
-    <Card>
-      <CardContent>
-        <Stack alignItems={"center"}>
-          <Typography variant="h4" sx={{p: 1}}>
-            Correct!
-          </Typography>
-          <Typography variant="p" sx={{p: 1}}>
-            This is how you should sign it
-          </Typography>
-          <ReactPlayer
-            url={ props.card.correctClip }
-            controls={true}
-          />
-          <Typography variant="h6" sx={{p: 1}}>
-            English: {props.card.english}
-          </Typography>
-          {props.gotItRight && <Typography variant="h6" sx={{p: 1}}>
-            ASL Gloss: {props.card.correctClipGloss}
-          </Typography>}
-          {props.gotItRight && props.card.explanation}
-        </Stack>
-      </CardContent>
-      <CardActions>
-        <Button onClick={()=>{props.setGotItRight(false)}}>Redo?</Button>
-      </CardActions>
-    </Card>
-  );
-}
-
 
 export default function App() {
   return (
@@ -306,10 +266,18 @@ function Feed(){
 let MyConfetti = () => {
   const { width, height } = useWindowSize()
   return (
-    <Confetti
-      width={width}
-      height={height}
-    />
+    <div style={{position: "relative"}}>
+      <Confetti
+        width={width} 
+        height={height} 
+        confettiSource={{x: 0, y: height}}
+        gravity={0.5}
+        recycle={false}
+        initialVelocityY={50}
+        initialVelocityX={50}
+        tweenDuration={1000}
+      />
+    </div>
   )
 }
 
