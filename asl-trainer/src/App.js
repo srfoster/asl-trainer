@@ -70,12 +70,8 @@ function PlainTextFeedItem(props){
     <CardHeader title="Instructions">
     </CardHeader>
     <CardContent >
-      <div style={{height: "60vh"}}>
-      <Typography
-        variant="h6"
-        sx={{p: 1}}
+      <div style={{height: "60vh", fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
-        </Typography>
       </div>
     </CardContent>
   </FeedCard>

@@ -1,6 +1,7 @@
 import Clips from "./Clips" 
+import { Typography } from "@mui/material"
 
-let errorInstructions = "The videos below contain mistakes!  Click the <b>FIRST</b> gloss word that doesn't match the video."
+let errorInstructions = "<p>The videos below contain mistakes!</p> <p>Mistakes can be related to grammar, vocabulary, or incorrect signs.</p> <p>Click the <b>FIRST</b> gloss word that doesn't match the video.</p>"
 
 let fingerspellingInstructions = "The videos below involve fingerspelling!  Click the word being spelled."
 
@@ -10,7 +11,7 @@ let instructions = (text)=>{
     type: "PlainTextFeedItem"
   }
 }
-
+ 
 let errorGameItems = [{
     clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
     clipGloss: "HELLO WHAT YOU NAME?",
