@@ -99,7 +99,8 @@ function SettingsFeedItem(props){
 function ErrorGameFeedItem(props){
   let [wordSelection, setWordSelection] = React.useState(null)
 
-  let gotItRight = wordSelection === props.card.correctAnswer["word"]
+  let gotItRight = undefined;
+  if(wordSelection !== null) gotItRight = (wordSelection === props.card.correctAnswer["word"])
 
   if(gotItRight) console.log("got it right")
 
@@ -152,7 +153,7 @@ function Video({url}){
             height="100%"
             onProgress={(p)=>{setProgress(p.played)}}
           />
-      <div style={{position: "absolute", bottom: 10}} >
+      <div style={{position: "absolute", bottom: 10, left: 4}} >
         <Stack direction="row" alignItems={"center"} spacing={2}>
           <Avatar src="https://mui.com/static/images/avatar/3.jpg" />
           <Typography variant="h6">
@@ -165,7 +166,12 @@ function Video({url}){
 }
 
 function FeedCard(props){
-  return <Card className={props.gotItRight ? "correct-card" : ""} sx={{mb: 1}} {...props}>
+  let theClass = "unanswered-card"
+  if(props.gotItRight === true)  theClass = "correct-card"
+  if(props.gotItRight === false) theClass = "incorrect-card"
+
+
+  return <Card className={theClass} sx={{mb: 1}} {...props}>
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
@@ -174,7 +180,8 @@ function FeedCard(props){
 function ClickableGloss(props){
   let [wordSelection, setWordSelection] = React.useState(null)
 
-  return <Stack direction="row" spacing={2}>{props.gloss.split(" ").map((x,i)=>{
+  return <Stack direction="row" spacing={2}>{
+    props.gloss.split(" ").map((x,i)=>{
      return <Button 
        variant={x !== wordSelection ? "contained" : "outlined"}
        key={i} onClick={() => {
