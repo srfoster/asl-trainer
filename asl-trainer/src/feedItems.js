@@ -5,9 +5,10 @@ let errorInstructions = "<p>The videos below contain mistakes!</p> <p>Mistakes c
 
 let fingerspellingInstructions = "The videos below involve fingerspelling!  Click the word being spelled."
 
-let instructions = (text)=>{
+let instructions = (title, text)=>{
   return {
     text: text, 
+    title: title || "",  
     type: "PlainTextFeedItem"
   }
 }
@@ -20,7 +21,11 @@ let errorGameItems = [{
     english: "Hello, what's your name?",
     //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
     correctAnswer: {/*type: "SS",*/ word: "YOU"},
-    type: "ErrorGameFeedItem" 
+    type: "ErrorGameFeedItem",
+    producer: {
+        username: "christineK",
+        avatar: "https://mui.com/static/images/avatar/3.jpg"
+    }
   },
   {
     clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
@@ -29,7 +34,12 @@ let errorGameItems = [{
     english: "I buy coffee at Starbucks",
     correctClipGloss: "I BUY COFFEE STARBUCKS",
     correctAnswer: {word: "I"},
-    type: "ErrorGameFeedItem" 
+    type: "ErrorGameFeedItem",
+    producer: {
+        username: "christineK",
+        avatar: "https://mui.com/static/images/avatar/3.jpg"
+    }
+
   },
   {
     clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-incorrect.mp4',
@@ -37,12 +47,16 @@ let errorGameItems = [{
     english: "He will take the ferry",
     correctClipGloss: "THEY GO FERRY",
     correctAnswer: {word: "GO"},
-    type: "ErrorGameFeedItem" 
+    type: "ErrorGameFeedItem",
+    producer: {
+        username: "christineK",
+        avatar: "https://mui.com/static/images/avatar/3.jpg"
+    }
   },
 ]
 
 export let aslItems = [
-  instructions(errorInstructions),
+  instructions("Find the Error", errorInstructions),
   ... errorGameItems,
-  instructions(fingerspellingInstructions + " (Coming soon)"),
+  instructions("Fingerspelling", fingerspellingInstructions + " (Coming soon)"),
 ]

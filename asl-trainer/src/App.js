@@ -67,7 +67,7 @@ function StatsFeedItem(props){
 
 function PlainTextFeedItem(props){
   return <FeedCard>
-    <CardHeader title="Instructions">
+    <CardHeader title={props.card.title}>
     </CardHeader>
     <CardContent >
       <div style={{height: "60vh", fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
@@ -111,7 +111,7 @@ function ErrorGameFeedItem(props){
   return (
     <FeedCard gotItRight={gotItRight}>
       <CardMedia style={{height: "80vh", position: "relative"}}>
-        <Video url={props.card.clip} />
+        <Video url={props.card.clip} producer={props.card.producer} />
         <Stack style={{position: "absolute", bottom: 10, right: 0}}>
           <IconButton aria-label="delete">
             <HeartIcon />
@@ -139,7 +139,7 @@ function ErrorGameFeedItem(props){
 }
 
 
-function Video({url}){
+function Video({url, producer}){
   let [playing, setPlaying] = React.useState(false)
   let [progress, setProgress] = React.useState(0)
 
@@ -155,9 +155,9 @@ function Video({url}){
           />
       <div style={{position: "absolute", bottom: 10, left: 4}} >
         <Stack direction="row" alignItems={"center"} spacing={2}>
-          <Avatar src="https://mui.com/static/images/avatar/3.jpg" />
+          <Avatar src={producer.avatar} />
           <Typography variant="h6">
-            Christine K
+            {producer.username} 
           </Typography>
         </Stack>
       </div>
@@ -208,7 +208,7 @@ export default function App() {
   );
 }
 
-function stringToComponent(s){
+function typeToComponent(s){
   return {
     StatsFeedItem,
     PlainTextFeedItem,
@@ -221,7 +221,7 @@ function Feed(){
   let [gotItRight, setGotItRight] = React.useState(false)
 
   let cardify = (c)=>{
-    let F = stringToComponent(c.type)
+    let F = typeToComponent(c.type)
 
     return <F card={c}
               setGotItRight={setGotItRight}
