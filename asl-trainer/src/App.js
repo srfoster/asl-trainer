@@ -307,10 +307,6 @@ function ComingSoonDialog(props) {
     onClose(selectedValue);
   };
 
-  const handleListItemClick = (value: string) => {
-    onClose(value);
-  };
-
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Coming Soon</DialogTitle>
