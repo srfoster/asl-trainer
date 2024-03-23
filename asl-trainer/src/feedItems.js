@@ -1,15 +1,17 @@
 import Clips from "./Clips" 
-import { Typography } from "@mui/material"
+//import { Typography } from "@mui/material"
 
+let welcomeInstructions = "<p>This is an early prototype of an app for learning ASL.</p> <p>Thanks for helping us test it!</p>"
 let errorInstructions = "<p>The videos below contain mistakes!</p> <p>Mistakes can be related to grammar, vocabulary, or incorrect signs.</p> <p>Click the <b>FIRST</b> gloss word that doesn't match the video.</p>"
 
 let fingerspellingInstructions = "The videos below involve fingerspelling!  Click the word being spelled."
 
-let instructions = (title, text)=>{
+let instructions = (title, text, params)=>{
   return {
     text: text, 
     title: title || "",  
-    type: "PlainTextFeedItem"
+    type: "PlainTextFeedItem",
+    params: params || {}
   }
 }
  
@@ -56,7 +58,8 @@ let errorGameItems = [{
 ]
 
 export let aslItems = [
-  instructions("Find the Error", errorInstructions),
+  instructions("Welcome", welcomeInstructions, {icon: "👋"}),
+  instructions("Find the Error", errorInstructions, {icon: "info"}),
   ... errorGameItems,
-  instructions("Fingerspelling", fingerspellingInstructions + " (Coming soon)"),
+  instructions("Fingerspelling", fingerspellingInstructions + " (Coming soon)", {icon: "🤞"}),
 ]

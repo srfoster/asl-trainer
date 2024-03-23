@@ -8,6 +8,10 @@ import CardMedia from '@mui/material/CardMedia';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
+import Divider from '@mui/material/Divider';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+
 import React from "react"
 import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
 import useWindowSize from 'react-use/lib/useWindowSize'
@@ -22,10 +26,12 @@ import HeartIcon from '@mui/icons-material/FavoriteBorder';
 import CommentIcon from '@mui/icons-material/Comment';
 import SpeedIcon from '@mui/icons-material/Speed';
 import SchoolIcon from '@mui/icons-material/School';
+import InfoIcon from '@mui/icons-material/Info';
 
 import { PieChart } from '@mui/x-charts/PieChart';
 
 import {aslItems} from "./feedItems"
+import {LastActionContext} from "./Contexts"
 
 const darkTheme = createTheme({
   palette: {
@@ -66,9 +72,28 @@ function StatsFeedItem(props){
 }
 
 function PlainTextFeedItem(props){
+  let stringToIcon = (s)=>{
+    let mappings = {info: InfoIcon, heart: HeartIcon}
+    let Mapping = mappings[s]
+
+    if(Mapping)
+      return <Mapping fontSize={"large"} />
+
+    return s
+  }
+
+  let icon = stringToIcon(props.card.params.icon )
   return <FeedCard>
-    <CardHeader title={props.card.title}>
-    </CardHeader>
+    <div style={{fontSize: 32, padding: 5}}>
+      <Stack 
+        direction="row" 
+        divider={<Divider orientation="vertical" flexItem />}
+
+        spacing={1} 
+        alignItems={"center"}>
+        {icon}<span>{props.card.title}</span>
+      </Stack>
+    </div>
     <CardContent >
       <div style={{height: "60vh", fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
@@ -112,20 +137,24 @@ function ErrorGameFeedItem(props){
     <FeedCard gotItRight={gotItRight}>
       <CardMedia style={{height: "80vh", position: "relative"}}>
         <Video url={props.card.clip} producer={props.card.producer} />
-        <Stack style={{position: "absolute", bottom: 10, right: 0}}>
-          <IconButton aria-label="delete">
-            <HeartIcon />
-          </IconButton>
-          <IconButton aria-label="comment">
-            <CommentIcon />
-          </IconButton>
-          <IconButton aria-label="comment">
-            <SpeedIcon />
-          </IconButton>
-          <IconButton aria-label="comment">
-            <SchoolIcon />
-          </IconButton>
-        </Stack>
+        <LastActionContext.Consumer>
+          {({action,setAction})=>(
+            <Stack style={{position: "absolute", bottom: 10, right: 0}}>
+              <IconButton aria-label="delete" onClick={(e)=>{setAction({action: "heart", arguments: props.card})}}>
+                <HeartIcon />
+              </IconButton>
+              <IconButton aria-label="comment"  onClick={(e)=>{setAction({action: "comment", arguments: props.card})}}>
+                <CommentIcon />
+              </IconButton>
+              <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "setSpeed", arguments: props.card})}}>
+                <SpeedIcon />
+              </IconButton>
+              <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "learnMore", arguments: props.card})}}>
+                <SchoolIcon />
+              </IconButton>
+            </Stack>
+          )}
+        </LastActionContext.Consumer>
       </CardMedia>
       <CardContent>
         <Stack alignItems={"center"}>
@@ -191,18 +220,30 @@ function ClickableGloss(props){
   })}</Stack>
 }
 
+
 export default function App() {
+  let [lastAction, setLastAction] = React.useState(null)
+
+  let setActionAndDoStuff = (action)=>{ 
+    console.log("setting action", action)
+
+    setLastAction(action)
+  }
+
+
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-        <Router>
-          <NavBar />
-          <Container maxWidth="md" style={{padding: 1}}>
-            <Routes>
-              <Route path="/" element={<Feed />} />
-            </Routes>
-          </Container>
-        </Router>    
+        <LastActionContext.Provider value={{action: lastAction, setAction: setActionAndDoStuff}}>
+          <Router>
+            <NavBar />
+            <Container maxWidth="md" style={{padding: 1}}>
+              <Routes>
+                <Route path="/" element={<Feed />} />
+              </Routes>
+            </Container>
+          </Router>    
+        </LastActionContext.Provider>
       </ThemeProvider>
     </>
   );
@@ -215,6 +256,24 @@ function typeToComponent(s){
     ErrorGameFeedItem,
     SettingsFeedItem
   }[s]
+}
+
+function ComingSoonDialog(props) {
+  const { onClose, selectedValue, open } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = (value: string) => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      <DialogTitle>Coming Soon</DialogTitle>
+    </Dialog>
+  );
 }
 
 function Feed(){
