@@ -19,11 +19,11 @@ let instructions = (title, text, params)=>{
 
 let glossItems = [{
   clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-  answerOptions: "HELLO WHAT YOUR NAME?",  
+  answerOptions: ["HELLO", "WHAT", "YOUR", "NAME?"],  
   english: "Hello, what's your name?",
   //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-  correctAnswer: {/*type: "SS",*/ word: "WHAT"},
-  type: "GlossGameFeedItem",
+  correctAnswer: "WHAT",
+  type: "MultipleChoiceFeedItem",
   producer: {
       username: "christineK",
       avatar: "https://mui.com/static/images/avatar/3.jpg"
@@ -31,10 +31,10 @@ let glossItems = [{
 },
 {
   clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
-  answerOptions: "I MAKE COFFEE STARBUCKS",  
+  answerOptions: ["I", "MAKE", "COFFEE", "STARBUCKS"],
   english: "I buy coffee at Starbucks",
-  correctAnswer: {word: "MAKE"},
-  type: "GlossGameFeedItem",
+  correctAnswer:  "MAKE",
+  type: "MultipleChoiceFeedItem",
   producer: {
       username: "christineK",
       avatar: "https://mui.com/static/images/avatar/3.jpg"
@@ -43,10 +43,10 @@ let glossItems = [{
 },
 {
   clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-correct.mp4',
-  answerOptions: "THEY WILL TAKE-CAR",
+  answerOptions: ["THEY", "WILL", "TAKE-CAR"],
   english: "They will take the ferry",
-  correctAnswer: {word: "TAKE-CAR"},
-  type: "GlossGameFeedItem",
+  correctAnswer: "TAKE-CAR",
+  type: "MultipleChoiceFeedItem",
   producer: {
       username: "christineK",
       avatar: "https://mui.com/static/images/avatar/3.jpg"
@@ -56,13 +56,11 @@ let glossItems = [{
 
 let errorGameItems = [{
     clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    //clipGloss: "HELLO WHAT YOU NAME?",
     correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
-    answerOptions: "HELLO YOU NAME WHAT?",
+    answerOptions: ["HELLO", "YOU", "NAME", "WHAT?"],
     english: "Hello, what's your name?",
-    //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
-    correctAnswer: {/*type: "SS",*/ word: "YOU"},
-    type: "ErrorGameFeedItem",
+    correctAnswer: "YOU",
+    type: "MultipleChoiceFeedItem",
     producer: {
         username: "christineK",
         avatar: "https://mui.com/static/images/avatar/3.jpg"
@@ -70,12 +68,11 @@ let errorGameItems = [{
   },
   {
     clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
-    //clipGloss: "MY SHOPPING COFFEE STARBUCKS",
     correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
     english: "I buy coffee at Starbucks",
-    answerOptions: "I BUY COFFEE STARBUCKS",
-    correctAnswer: {word: "I"},
-    type: "ErrorGameFeedItem",
+    answerOptions: ["I", "BUY", "COFFEE", "STARBUCKS"],
+    correctAnswer: "I",
+    type: "MultipleChoiceFeedItem",
     producer: {
         username: "christineK",
         avatar: "https://mui.com/static/images/avatar/3.jpg"
@@ -86,9 +83,9 @@ let errorGameItems = [{
     clip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-incorrect.mp4',
     correctClip: Clips.s3_host + '/clips/error-game/he-will-go-ferry-correct.mp4',
     english: "He will take the ferry",
-    answerOptions: "THEY GO FERRY",
-    correctAnswer: {word: "GO"},
-    type: "ErrorGameFeedItem",
+    answerOptions: ["THEY", "GO", "FERRY"],
+    correctAnswer: "GO",
+    type: "MultipleChoiceFeedItem",
     producer: {
         username: "christineK",
         avatar: "https://mui.com/static/images/avatar/3.jpg"

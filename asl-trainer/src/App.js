@@ -121,11 +121,11 @@ function SettingsFeedItem(props){
   </FeedCard>
 }
 
-function ErrorGameFeedItem(props){
+function MultipleChoiceFeedItem(props){
   let [wordSelection, setWordSelection] = React.useState(null)
 
   let gotItRight = undefined;
-  if(wordSelection !== null) gotItRight = (wordSelection === props.card.correctAnswer["word"])
+  if(wordSelection !== null) gotItRight = (wordSelection === props.card.correctAnswer)
 
   if(gotItRight) console.log("got it right")
 
@@ -140,7 +140,7 @@ function ErrorGameFeedItem(props){
         <LastActionContext.Consumer>
           {({action,setAction})=>(
             <Stack style={{position: "absolute", bottom: 10, right: 0}}>
-              <IconButton aria-label="delete" onClick={(e)=>{setAction({action: "heart", arguments: props.card})}}>
+              <IconButton aria-label="delete" onClick={(e)=>{console.log("hello");setAction({action: "heart", arguments: props.card})}}>
                 <HeartIcon />
               </IconButton>
               <IconButton aria-label="comment"  onClick={(e)=>{setAction({action: "comment", arguments: props.card})}}>
@@ -167,47 +167,6 @@ function ErrorGameFeedItem(props){
   );
 }
 
-function GlossGameFeedItem(props){
-  let [wordSelection, setWordSelection] = React.useState(null)
-
-  let gotItRight = undefined;
-  if(wordSelection !== null) gotItRight = (wordSelection === props.card.correctAnswer["word"])
-
-  if(gotItRight) console.log("got it right")
-
-  React.useEffect(()=>{
-    if(gotItRight) props.setGotItRight(true)
-  },[gotItRight])
-
-  return (
-    <FeedCard gotItRight={gotItRight}>
-      <CardMedia style={{height: "80vh", position: "relative"}}>
-        <Video url={props.card.clip} producer={props.card.producer} />
-        <Stack style={{position: "absolute", bottom: 10, right: 0}}>
-          <IconButton aria-label="delete">
-            <HeartIcon />
-          </IconButton>
-          <IconButton aria-label="comment">
-            <CommentIcon />
-          </IconButton>
-          <IconButton aria-label="comment">
-            <SpeedIcon />
-          </IconButton>
-          <IconButton aria-label="comment">
-            <SchoolIcon />
-          </IconButton>
-        </Stack>
-      </CardMedia>
-      <CardContent>
-        <Stack alignItems={"center"}>
-          <Typography variant="h6" sx={{p: 1}}>
-            </Typography>
-            <ClickableGloss onClick={setWordSelection} gloss={props.card.answerOptions} />
-        </Stack>
-      </CardContent>
-    </FeedCard>
-  );
-}
 
 function Video({url, producer}){
   let [playing, setPlaying] = React.useState(false)
@@ -251,7 +210,7 @@ function ClickableGloss(props){
   let [wordSelection, setWordSelection] = React.useState(null)
 
   return <Stack direction="row" spacing={2}>{
-    props.gloss.split(" ").map((x,i)=>{
+    props.gloss.map((x,i)=>{
      return <Button 
        variant={x !== wordSelection ? "contained" : "outlined"}
        key={i} onClick={() => {
@@ -294,8 +253,7 @@ function typeToComponent(s){
   return {
     StatsFeedItem,
     PlainTextFeedItem,
-    ErrorGameFeedItem,
-    GlossGameFeedItem,
+    MultipleChoiceFeedItem,
     SettingsFeedItem
   }[s]
 }
