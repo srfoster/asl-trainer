@@ -33,6 +33,8 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import {aslItems} from "./feedItems"
 import {LastActionContext} from "./Contexts"
 
+import { shuffle } from './utils';
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -160,7 +162,7 @@ function MultipleChoiceFeedItem(props){
         <Stack alignItems={"center"}>
           <Typography variant="h6" sx={{p: 1}}>
             </Typography>
-            <ClickableGloss onClick={setWordSelection} gloss={props.card.answerOptions} />
+            <ClickableGloss onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
         </Stack>
       </CardContent>
     </FeedCard>
@@ -173,15 +175,17 @@ function Video({url, producer}){
   let [progress, setProgress] = React.useState(0)
 
   return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
-    <ReactPlayer
-            playing={playing}
-            loop={true}
-            url={ url}
-            controls={false}
-            width="100%"
-            height="100%"
-            onProgress={(p)=>{setProgress(p.played)}}
-          />
+    <div style={{marginLeft: "-100%"}}>
+      <ReactPlayer
+              playing={playing}
+              loop={true}
+              url={ url}
+              controls={false}
+              width="150%"
+              height="100%"
+              onProgress={(p)=>{setProgress(p.played)}}
+            />
+    </div>
       <div style={{position: "absolute", bottom: 10, left: 4}} >
         <Stack direction="row" alignItems={"center"} spacing={2}>
           <Avatar src={producer.avatar} />
@@ -284,7 +288,7 @@ function Feed(){
         />
   }
 
-  let [items, setItems] = React.useState(aslItems.concat(stats({})))
+  let [items, setItems] = React.useState(aslItems)
 
   let fetchData = ()=>{
     //setItems(items.concat([stats({})]))
