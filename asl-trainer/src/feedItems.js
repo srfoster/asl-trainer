@@ -37,7 +37,12 @@ let randomLettersExcept = (n, except)=>{
 
 let lalahep = {
     username: "lalahep",
-    avatar: "https://mui.com/static/images/avatar/2.jpg"
+    avatar: Clips.s3_host + "/profile-pics/laura.png"
+}
+
+let christineK = {
+    username: "christineK",
+    avatar: Clips.s3_host + "/profile-pics/christine.png"
 }
 
 let abcItems = allLetters.map((letter)=> ({
@@ -110,10 +115,7 @@ let glossItems = [{
   //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
   correctAnswer: "WHAT",
   type: "MultipleChoiceFeedItem",
-  producer: {
-      username: "christineK",
-      avatar: "https://mui.com/static/images/avatar/3.jpg"
-  }
+  producer: christineK 
 },
 {
   clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
@@ -121,10 +123,7 @@ let glossItems = [{
   english: "I buy coffee at Starbucks",
   correctAnswer:  "MAKE",
   type: "MultipleChoiceFeedItem",
-  producer: {
-      username: "christineK",
-      avatar: "https://mui.com/static/images/avatar/3.jpg"
-  }
+  producer: christineK
 
 },
 {
@@ -133,10 +132,7 @@ let glossItems = [{
   english: "They will take the ferry",
   correctAnswer: "TAKE-CAR",
   type: "MultipleChoiceFeedItem",
-  producer: {
-      username: "christineK",
-      avatar: "https://mui.com/static/images/avatar/3.jpg"
-  }
+  producer: christineK
 },
 ]
 
@@ -147,10 +143,7 @@ let errorGameItems = [{
     english: "Hello, what's your name?",
     correctAnswer: "YOU",
     type: "MultipleChoiceFeedItem",
-    producer: {
-        username: "christineK",
-        avatar: "https://mui.com/static/images/avatar/3.jpg"
-    }
+    producer: christineK
   },
   {
     clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
@@ -159,10 +152,7 @@ let errorGameItems = [{
     answerOptions: ["I", "BUY", "COFFEE", "STARBUCKS"],
     correctAnswer: "I",
     type: "MultipleChoiceFeedItem",
-    producer: {
-        username: "christineK",
-        avatar: "https://mui.com/static/images/avatar/3.jpg"
-    }
+    producer: christineK
 
   },
   {
@@ -172,10 +162,7 @@ let errorGameItems = [{
     answerOptions: ["THEY", "GO", "FERRY"],
     correctAnswer: "GO",
     type: "MultipleChoiceFeedItem",
-    producer: {
-        username: "christineK",
-        avatar: "https://mui.com/static/images/avatar/3.jpg"
-    }
+    producer: christineK
   },
 ]
 
