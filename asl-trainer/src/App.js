@@ -141,18 +141,18 @@ function MultipleChoiceFeedItem(props){
         <Video url={props.card.clip} producer={props.card.producer} />
         <LastActionContext.Consumer>
           {({action,setAction})=>(
-            <Stack style={{position: "absolute", bottom: 10, right: 0}}>
+            <Stack style={{position: "absolute", bottom: 100, right: 0}}>
               <IconButton aria-label="delete" onClick={(e)=>{console.log("hello");setAction({action: "heart", arguments: props.card})}}>
-                <HeartIcon />
+                <HeartIcon style={{ width: '50px', height: '50px' }}/>
               </IconButton>
               <IconButton aria-label="comment"  onClick={(e)=>{setAction({action: "comment", arguments: props.card})}}>
-                <CommentIcon />
+                <CommentIcon style={{ width: '50px', height: '50px' }}/>
               </IconButton>
               <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "setSpeed", arguments: props.card})}}>
-                <SpeedIcon />
+                <SpeedIcon style={{ width: '50px', height: '50px' }}/>
               </IconButton>
               <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "learnMore", arguments: props.card})}}>
-                <SchoolIcon />
+                <SchoolIcon style={{ width: '50px', height: '50px' }}/>
               </IconButton>
             </Stack>
           )}
