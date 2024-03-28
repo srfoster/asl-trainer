@@ -12,7 +12,7 @@ import Divider from '@mui/material/Divider';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import React from "react"
+import React, { useEffect } from "react"
 import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
@@ -85,7 +85,7 @@ function PlainTextFeedItem(props){
   }
 
   let icon = stringToIcon(props.card.params.icon )
-  return <FeedCard>
+  return <FeedCard card={props.card}>
     <div style={{fontSize: 32, padding: 5}}>
       <Stack 
         direction="row" 
@@ -107,7 +107,7 @@ function PlainTextFeedItem(props){
 function SettingsFeedItem(props){
   let [selectedSettings, setSelectedSettings] = React.useState([])
 
-  return <FeedCard>
+  return <FeedCard card={props.card}>
     <CardContent>
       <Typography
         variant="h6"
@@ -136,7 +136,7 @@ function MultipleChoiceFeedItem(props){
   },[gotItRight])
 
   return (
-    <FeedCard gotItRight={gotItRight}>
+    <FeedCard gotItRight={gotItRight} card={props.card}>
       <CardMedia style={{height: "80vh", position: "relative"}}>
         <Video url={props.card.clip} producer={props.card.producer} />
         <LastActionContext.Consumer>
@@ -199,12 +199,31 @@ function Video({url, producer}){
 }
 
 function FeedCard(props){
+  let cardRef = React.useRef(null)
+
+
+  useEffect(()=>{
+    if(!cardRef.current) return
+
+    let callback = (entries)=>{
+      entries.forEach(entry=>{
+        if(entry.target != cardRef.current || !entry.isIntersecting) return
+        console.log("Just saw",cardRef.current, props.card.title)
+      })
+    }
+    const observer = new IntersectionObserver(callback, {root: null, rootMargin: "0px", threshold: 1.0})
+
+    observer.observe(cardRef.current)
+
+    return ()=>{observer.unobserve(cardRef.current)}
+  }, [cardRef])
+
   let theClass = "unanswered-card"
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
 
 
-  return <Card className={theClass} sx={{mb: 1}} {...props}>
+  return <Card ref={cardRef} className={theClass} sx={{mb: 1}} >
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
@@ -279,19 +298,28 @@ function ComingSoonDialog(props) {
 function Feed(){
   let [gotItRight, setGotItRight] = React.useState(false)
 
-  let cardify = (c)=>{
+  useEffect(()=>{
+    window.onscroll = ()=>{
+       //console.log("Scroll", window.scrollY)
+    }
+
+    return ()=>{window.onscroll = null}
+  },[])
+
+  let cardify = (c,i)=>{
     let F = typeToComponent(c.type)
 
-    return <F card={c}
+    return <F key={i}
+              card={c}
               setGotItRight={setGotItRight}
               gotItRight={gotItRight}
         />
   }
 
-  let [items, setItems] = React.useState(aslItems)
+  let [items, setItems] = React.useState(aslItems.slice(0,3))
 
   let fetchData = ()=>{
-    //setItems(items.concat([stats({})]))
+    setItems(items.concat(aslItems.slice(items.length, items.length + 1)))
   }
 
   let refresh = ()=>{
