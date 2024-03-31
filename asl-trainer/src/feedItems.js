@@ -51,7 +51,8 @@ let abcItems = allLetters.map((letter)=> ({
         randomizeOptions: true,
         correctAnswer: letter,
         type: "MultipleChoiceFeedItem",
-        producer: lalahep
+        producer: lalahep,
+        title: "Alphabet Practice"
     }))
 
 let fingerspellingItems = [
@@ -61,7 +62,8 @@ let fingerspellingItems = [
         randomizeOptions: true,
         correctAnswer: "COWBOY",
         type: "MultipleChoiceFeedItem",
-        producer: lalahep 
+        producer: lalahep,
+        title: "Fingerspelling Practice"
     },
     {
         clip: Clips.s3_host + '/clips/spelling/sp-brunch.mp4',
@@ -69,7 +71,8 @@ let fingerspellingItems = [
         randomizeOptions: true,
         correctAnswer: "BRUNCH",
         type: "MultipleChoiceFeedItem",
-        producer: lalahep 
+        producer: lalahep,
+        title: "Fingerspelling Practice" 
     },
     {
         clip: Clips.s3_host + '/clips/spelling/sp-laura.mp4',
@@ -77,7 +80,8 @@ let fingerspellingItems = [
         randomizeOptions: true,
         correctAnswer: "LAURA",
         type: "MultipleChoiceFeedItem",
-        producer: lalahep 
+        producer: lalahep,
+        title: "Fingerspelling Practice" 
     },
 ]
 
@@ -88,7 +92,8 @@ let vocabItems = [
         randomizeOptions: true,
         correctAnswer: "BOY",
         type: "MultipleChoiceFeedItem",
-        producer: lalahep 
+        producer: lalahep,
+        title: "Vocab Builder"  
     },
     {
         clip: Clips.s3_host + '/clips/vocab/car.mp4',
@@ -96,7 +101,8 @@ let vocabItems = [
         randomizeOptions: true,
         correctAnswer: "CAR",
         type: "MultipleChoiceFeedItem",
-        producer: lalahep 
+        producer: lalahep,
+        title: "Vocab Builder"  
     },
     {
         clip: Clips.s3_host + '/clips/vocab/play.mp4',
@@ -104,7 +110,8 @@ let vocabItems = [
         randomizeOptions: true,
         correctAnswer: "PLAY",
         type: "MultipleChoiceFeedItem",
-        producer: lalahep 
+        producer: lalahep,
+        title: "Vocab Builder"  
     },
 ]
 
@@ -115,7 +122,8 @@ let glossItems = [{
   //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
   correctAnswer: "WHAT",
   type: "MultipleChoiceFeedItem",
-  producer: christineK 
+  producer: christineK, 
+  title: "Find the Gloss Mistake" 
 },
 {
   clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
@@ -123,7 +131,8 @@ let glossItems = [{
   english: "I buy coffee at Starbucks",
   correctAnswer:  "MAKE",
   type: "MultipleChoiceFeedItem",
-  producer: christineK
+  producer: christineK, 
+  title: "Find the Gloss Mistake" 
 
 },
 {
@@ -132,7 +141,8 @@ let glossItems = [{
   english: "They will take the ferry",
   correctAnswer: "TAKE-CAR",
   type: "MultipleChoiceFeedItem",
-  producer: christineK
+  producer: christineK, 
+  title: "Find the Gloss Mistake" 
 },
 ]
 
@@ -143,7 +153,8 @@ let errorGameItems = [{
     english: "Hello, what's your name?",
     correctAnswer: "YOU",
     type: "MultipleChoiceFeedItem",
-    producer: christineK
+    producer: christineK,
+    title: "Spot the Sign Mistake"
   },
   {
     clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
@@ -152,7 +163,8 @@ let errorGameItems = [{
     answerOptions: ["I", "BUY", "COFFEE", "STARBUCKS"],
     correctAnswer: "I",
     type: "MultipleChoiceFeedItem",
-    producer: christineK
+    producer: christineK,
+    title: "Spot the Sign Mistake"
 
   },
   {
@@ -162,7 +174,8 @@ let errorGameItems = [{
     answerOptions: ["THEY", "GO", "FERRY"],
     correctAnswer: "GO",
     type: "MultipleChoiceFeedItem",
-    producer: christineK
+    producer: christineK,
+    title: "Spot the Sign Mistake"
   },
 ]
 

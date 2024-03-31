@@ -34,6 +34,7 @@ import {aslItems} from "./feedItems"
 import {LastActionContext} from "./Contexts"
 
 import { shuffle } from './utils';
+import { FitScreen } from '@mui/icons-material';
 
 const darkTheme = createTheme({
   palette: {
@@ -97,7 +98,7 @@ function PlainTextFeedItem(props){
       </Stack>
     </div>
     <CardContent >
-      <div style={{height: "60vh", fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
+      <div style={{fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
       </div>
     </CardContent>
@@ -138,6 +139,13 @@ function MultipleChoiceFeedItem(props){
   return (
     <FeedCard gotItRight={gotItRight} card={props.card}>
       <CardMedia style={{height: "80vh", position: "relative"}}>
+      <CardContent>
+        <Stack alignItems={"center"}>
+          <Typography variant="h6" sx={{p: 1, margin: -2}}>
+            {props.card.title}
+            </Typography>
+        </Stack>
+      </CardContent>
         <Video url={props.card.clip} producer={props.card.producer} />
         <LastActionContext.Consumer>
           {({action,setAction})=>(
@@ -223,7 +231,7 @@ function FeedCard(props){
   if(props.gotItRight === false) theClass = "incorrect-card"
 
 
-  return <Card ref={cardRef} className={theClass} sx={{mb: 1}} >
+  return <Card ref={cardRef} className={theClass} sx={{mb: 1, height: "90vh"}} >
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
