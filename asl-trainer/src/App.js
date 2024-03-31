@@ -35,6 +35,9 @@ import {LastActionContext} from "./Contexts"
 
 import { shuffle } from './utils';
 
+import { useSwipeable } from 'react-swipeable'
+import { start } from '@popperjs/core';
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -51,7 +54,7 @@ let stats = (data)=>{
 }
 
 function StatsFeedItem(props){
-  return <FeedCard>
+  return <FeedCard {... props}>
     <CardHeader title="You're doing great!">
     </CardHeader>
     <CardContent>
@@ -85,7 +88,7 @@ function PlainTextFeedItem(props){
   }
 
   let icon = stringToIcon(props.card.params.icon )
-  return <FeedCard card={props.card}>
+  return <FeedCard {...props}>
     <div style={{fontSize: 32, padding: 5}}>
       <Stack 
         direction="row" 
@@ -107,7 +110,7 @@ function PlainTextFeedItem(props){
 function SettingsFeedItem(props){
   let [selectedSettings, setSelectedSettings] = React.useState([])
 
-  return <FeedCard card={props.card}>
+  return <FeedCard {...props}>
     <CardContent>
       <Typography
         variant="h6"
@@ -136,9 +139,10 @@ function MultipleChoiceFeedItem(props){
   },[gotItRight])
 
   return (
-    <FeedCard gotItRight={gotItRight} card={props.card}>
+    <FeedCard {...props} gotItRight={gotItRight} >
       <CardMedia style={{height: "80vh", position: "relative"}}>
-        <Video url={props.card.clip} producer={props.card.producer} />
+        {JSON.stringify(props.current) }
+        <Video startPlaying={props.current} url={props.card.clip} producer={props.card.producer} />
         <LastActionContext.Consumer>
           {({action,setAction})=>(
             <Stack style={{position: "absolute", bottom: 100, right: 0}}>
@@ -170,9 +174,17 @@ function MultipleChoiceFeedItem(props){
 }
 
 
-function Video({url, producer}){
+function Video({startPlaying, url, producer}){
   let [playing, setPlaying] = React.useState(false)
   let [progress, setProgress] = React.useState(0)
+
+  useEffect(()=>{
+    console.log("setting playing", startPlaying)
+    if(playing == false && startPlaying == true)
+      setPlaying(true)
+    if(playing == true && startPlaying == false)
+      setPlaying(false)
+  },[startPlaying])
 
   return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
     <div style={{marginLeft: "-100%"}}>
@@ -201,27 +213,26 @@ function Video({url, producer}){
 function FeedCard(props){
   let cardRef = React.useRef(null)
 
-
   useEffect(()=>{
     if(!cardRef.current) return
 
     let callback = (entries)=>{
       entries.forEach(entry=>{
         if(entry.target != cardRef.current || !entry.isIntersecting) return
-        console.log("Just saw",cardRef.current, props.card.title)
+        props.setCurrent()
       })
     }
-    const observer = new IntersectionObserver(callback, {root: null, rootMargin: "0px", threshold: 1.0})
+
+    const observer = new IntersectionObserver(callback, {root: null, rootMargin: "0px", threshold: 0.5})
 
     observer.observe(cardRef.current)
 
-    return ()=>{observer.unobserve(cardRef.current)}
+    return ()=>{observer && cardRef && observer.unobserve(cardRef.current)}
   }, [cardRef])
 
   let theClass = "unanswered-card"
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
-
 
   return <Card ref={cardRef} className={theClass} sx={{mb: 1}} >
     {props.gotItRight && <MyConfetti />}
@@ -297,26 +308,40 @@ function ComingSoonDialog(props) {
 
 function Feed(){
   let [gotItRight, setGotItRight] = React.useState(false)
+  let [currentItem, setCurrentItem] = React.useState(0)
 
-  useEffect(()=>{
-    window.onscroll = ()=>{
-       //console.log("Scroll", window.scrollY)
-    }
+  const handlers = useSwipeable({
+    onSwiped: (eventData) => {
+      console.log(eventData)
+      if(eventData.deltaY < -200){
+        console.log("Next!")
+        setCurrentItem(currentItem + 1)
+      }
+    },
+  });
 
-    return ()=>{window.onscroll = null}
-  },[])
 
   let cardify = (c,i)=>{
     let F = typeToComponent(c.type)
 
-    return <F key={i}
-              card={c}
-              setGotItRight={setGotItRight}
-              gotItRight={gotItRight}
-        />
+    if(i === currentItem)
+      c.current = true
+    else
+      c.current = false
+
+    return <div style={{scrollSnapAlign: "start none", scrollSnapStop: "always"}}>
+     { <F key={i}
+          card={c}
+          setCurrent={()=>{setCurrentItem(i)}}
+          current={i == currentItem}
+          setGotItRight={setGotItRight}
+          gotItRight={gotItRight}
+      />}
+    </div>
   }
 
-  let [items, setItems] = React.useState(aslItems.slice(0,3))
+  let [items, setItems] = React.useState(aslItems)
+  //React.useState(aslItems.slice(0,3))
 
   let fetchData = ()=>{
     setItems(items.concat(aslItems.slice(items.length, items.length + 1)))
@@ -326,7 +351,11 @@ function Feed(){
     console.log("refreshing")
   }
 
-//  return items.map(cardify)
+  return <div id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
+    {items.map(cardify)}
+  </div>
+
+  //TODO: Get infinite scroll working again
   return <InfiniteScroll
       dataLength={items.length} 
       next={fetchData}
@@ -348,7 +377,9 @@ function Feed(){
         <h3 style={{ textAlign: 'center', color: "white" }}>&#8593; Release to refresh</h3>
       }
     >
-      {items.map(cardify)}
+      <div id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
+          {items.map(cardify)}
+      </div>
     </InfiniteScroll>
 }
 
