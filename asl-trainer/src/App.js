@@ -88,7 +88,7 @@ function PlainTextFeedItem(props){
   }
 
   let icon = stringToIcon(props.card.params.icon )
-  return <FeedCard {...props}>
+  return <FeedCard {...props} gotItRight={undefined}>
     <div style={{fontSize: 32, padding: 5}}>
       <Stack 
         direction="row" 
