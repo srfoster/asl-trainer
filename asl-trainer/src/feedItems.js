@@ -182,7 +182,8 @@ let errorGameItems = [{
 export let aslItems = [
   instructions("Welcome", welcomeInstructions, {icon: "👋"}),
   instructions("Letter Recognition", abcInstructions, {icon: "info"}),
-  ... shuffle(abcItems).slice(0, 3),
+  //... shuffle(abcItems).slice(0, 3),
+  ...abcItems.slice(0, 3),
   instructions("Vocab", vocabInstructions, {icon: "📚"}),
   ... vocabItems,
   instructions("Fingerspelling", fingerspellingInstructions, {icon: "🤞"}),

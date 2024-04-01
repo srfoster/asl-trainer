@@ -185,23 +185,20 @@ function Video({startPlaying, url, producer}){
   let [progress, setProgress] = React.useState(0)
 
   useEffect(()=>{
-    //Why not working????
-    if(startPlaying){
-      setPlaying(true)
-    }
+    setPlaying(startPlaying)
   },[startPlaying])
 
   return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
     <div style={{marginLeft: "-100%"}}>
       <ReactPlayer
-              playing={playing}
-              loop={true}
-              url={ url}
-              controls={false}
-              width="150%"
-              height="100%"
-              onProgress={(p)=>{setProgress(p.played)}}
-            />
+          playing={playing}
+          loop={true}
+          url={ url}
+          controls={false}
+          width="150%"
+          height="100%"
+          onProgress={(p)=>{setProgress(p.played)}}
+        />
     </div>
       <div style={{position: "absolute", bottom: 10, left: 4}} >
         <Stack direction="row" alignItems={"center"} spacing={2}>
@@ -336,7 +333,6 @@ function Feed(){
   }
 
   let [items, setItems] = React.useState(aslItems)
-  //React.useState(aslItems.slice(0,3))
 
   let fetchData = ()=>{
     setItems(items.concat(aslItems.slice(items.length, items.length + 1)))
