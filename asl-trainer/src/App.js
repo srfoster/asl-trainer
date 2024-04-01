@@ -34,8 +34,8 @@ import {aslItems} from "./feedItems"
 import {LastActionContext} from "./Contexts"
 
 import { shuffle } from './utils';
+import { FitScreen } from '@mui/icons-material';
 
-import { useSwipeable } from 'react-swipeable'
 import { start } from '@popperjs/core';
 
 const darkTheme = createTheme({
@@ -100,7 +100,7 @@ function PlainTextFeedItem(props){
       </Stack>
     </div>
     <CardContent >
-      <div style={{height: "60vh", fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
+      <div style={{fontSize: 36, fontWeight: "lighter",textAlign: 'center'}}
         dangerouslySetInnerHTML={{__html: props.card.text}}>
       </div>
     </CardContent>
@@ -141,8 +141,14 @@ function MultipleChoiceFeedItem(props){
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
       <CardMedia style={{height: "80vh", position: "relative"}}>
-        {JSON.stringify(props.current) }
+        <Stack alignItems={"center"}>
+          <Typography variant="h6" sx={{p: 1, m: 0}}>
+            {props.card.title}
+            </Typography>
+        </Stack>
+
         <Video startPlaying={props.current} url={props.card.clip} producer={props.card.producer} />
+
         <LastActionContext.Consumer>
           {({action,setAction})=>(
             <Stack style={{position: "absolute", bottom: 100, right: 0}}>
@@ -233,7 +239,8 @@ function FeedCard(props){
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
 
-  return <Card ref={cardRef} className={theClass} sx={{mb: 1}} >
+  return <Card ref={cardRef} className={theClass} sx={{mb: 1, height: "90vh"}} >
+
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
@@ -308,17 +315,6 @@ function ComingSoonDialog(props) {
 function Feed(){
   let [gotItRight, setGotItRight] = React.useState(false)
   let [currentItem, setCurrentItem] = React.useState(0)
-
-  const handlers = useSwipeable({
-    onSwiped: (eventData) => {
-      console.log(eventData)
-      if(eventData.deltaY < -200){
-        console.log("Next!")
-        setCurrentItem(currentItem + 1)
-      }
-    },
-  });
-
 
   let cardify = (c,i)=>{
     let F = typeToComponent(c.type)
