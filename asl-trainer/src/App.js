@@ -179,11 +179,10 @@ function Video({startPlaying, url, producer}){
   let [progress, setProgress] = React.useState(0)
 
   useEffect(()=>{
-    console.log("setting playing", startPlaying)
-    if(playing == false && startPlaying == true)
+    //Why not working????
+    if(startPlaying){
       setPlaying(true)
-    if(playing == true && startPlaying == false)
-      setPlaying(false)
+    }
   },[startPlaying])
 
   return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
