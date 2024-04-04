@@ -19,7 +19,6 @@ import Confetti from 'react-confetti'
 import { Stack, Typography } from '@mui/material';
 import Fade from '@mui/material/Fade';
 import NavBar from "./NavBar" 
-import InfiniteScroll from 'react-infinite-scroll-component';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import HeartIcon from '@mui/icons-material/FavoriteBorder';
@@ -147,7 +146,8 @@ function MultipleChoiceFeedItem(props){
             </Typography>
         </Stack>
 
-        <Video startPlaying={props.current} url={props.card.clip} producer={props.card.producer} />
+        {Math.abs(props.myIndex - props.currentIndex) < 2 &&
+        <Video startPlaying={props.iAmCurrent} url={props.card.clip} producer={props.card.producer} />}
 
         <LastActionContext.Consumer>
           {({action,setAction})=>(
@@ -191,7 +191,9 @@ function Video({startPlaying, url, producer}){
   return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
     <div style={{marginLeft: "-100%"}}>
       <ReactPlayer
+          id={url}
           playing={playing}
+          muted={true}
           loop={true}
           url={ url}
           controls={false}
@@ -313,6 +315,27 @@ function Feed(){
   let [gotItRight, setGotItRight] = React.useState(false)
   let [currentItem, setCurrentItem] = React.useState(0)
 
+  let scrollableRef = React.useRef(null)
+  let [items, setItems] = React.useState(aslItems.slice(0,3))
+
+  useEffect(()=>{
+    if(currentItem === items.length - 2){
+      //Far from perfect, but this ensures that the scroll snap animation is complete before adding more items.  Otherwise user will see a hitch.
+
+      let disable = (e)=>{e.preventDefault()}
+      //Disable scroll
+      scrollableRef.current.addEventListener("touchmove", disable, {passive: false})
+
+      setTimeout(()=>{
+         
+        fetchData()
+        //Re-enable scroll
+        scrollableRef.current.removeEventListener("touchmove", disable, {passive: false})
+
+      }, 700)
+    }
+  }, [currentItem])
+
   let cardify = (c,i)=>{
     let F = typeToComponent(c.type)
 
@@ -324,54 +347,24 @@ function Feed(){
     return <div style={{scrollSnapAlign: "start none", scrollSnapStop: "always"}}>
      { <F key={i}
           card={c}
-          setCurrent={()=>{setCurrentItem(i)}}
-          current={i == currentItem}
+          setCurrent={()=>{console.log("Current changed", i);setCurrentItem(i)}}
+          iAmCurrent={i == currentItem}
+          myIndex={i}
+          currentIndex={currentItem}
           setGotItRight={setGotItRight}
           gotItRight={gotItRight}
       />}
     </div>
   }
 
-  let [items, setItems] = React.useState(aslItems)
 
   let fetchData = ()=>{
     setItems(items.concat(aslItems.slice(items.length, items.length + 1)))
   }
 
-  let refresh = ()=>{
-    console.log("refreshing")
-  }
-
-  return <div id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
-    {items.map(cardify)}
+  return <div ref={scrollableRef} id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
+     {items.map(cardify)}
   </div>
-
-  //TODO: Get infinite scroll working again
-  return <InfiniteScroll
-      dataLength={items.length} 
-      next={fetchData}
-      hasMore={true}
-      loader={<h4>Loading...</h4>}
-      endMessage={
-        <p style={{ textAlign: 'center' }}>
-          <b>Yay! You have seen it all</b>
-        </p>
-      }
-      // below props only if you need pull down functionality
-      refreshFunction={refresh}
-      pullDownToRefresh
-      pullDownToRefreshThreshold={50}
-      pullDownToRefreshContent={
-        <h3 style={{ textAlign: 'center', color: "white" }}>&#8595; Pull down to refresh</h3>
-      }
-      releaseToRefreshContent={
-        <h3 style={{ textAlign: 'center', color: "white" }}>&#8593; Release to refresh</h3>
-      }
-    >
-      <div id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
-          {items.map(cardify)}
-      </div>
-    </InfiniteScroll>
 }
 
 
