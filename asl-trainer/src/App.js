@@ -238,8 +238,7 @@ function FeedCard(props){
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
 
-  return <Card ref={cardRef} className={theClass} sx={{mb: 1, height: "90vh"}} >
-
+  return <Card ref={cardRef} className={theClass} sx={{height: "90vh",mb: 2, mt: 2}} >
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
@@ -251,7 +250,8 @@ function ClickableGloss(props){
   return <Stack direction="row" spacing={2}>{
     props.gloss.map((x,i)=>{
      return <Button 
-       variant={x !== wordSelection ? "contained" : "outlined"}
+       variant="contained"
+       color={x !== wordSelection ? "primary" : "secondary"}
        key={i} onClick={() => {
         setWordSelection(x)
         props.onClick(x)
@@ -375,6 +375,7 @@ let MyConfetti = () => {
       <Confetti
         width={width} 
         height={height} 
+        numberOfPieces={400}
         confettiSource={{x: 0, y: height}}
         gravity={0.5}
         recycle={false}

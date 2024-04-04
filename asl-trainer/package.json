@@ -21,6 +21,7 @@
     "react-swipeable": "^7.0.1",
     "react-timer-hook": "^3.0.7",
     "react-use": "^17.5.0",
+    "seedrandom": "^3.0.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
