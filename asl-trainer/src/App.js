@@ -200,19 +200,19 @@ function Video({startPlaying, url, setProgress}){
     setPlaying(startPlaying)
   },[startPlaying])
 
-  return <div style={{height: "110%"}} onClick={()=>{setPlaying(!playing)}}>
-    <div style={{marginLeft: "-120%"}}>
-      <ReactPlayer
+  return <div style={{}} onClick={()=>{setPlaying(!playing)}}>
+    <div style={{}}>
+      {<ReactPlayer
           id={url}
           playing={playing}
           muted={true}
           loop={true}
           url={ url}
           controls={false}
-          width="160%"
-          height="100%"
+          width={"100%"}
+          height={"100%"}
           onProgress={(p)=>{setProgress(p.played)}}
-        />
+/> }
     </div>
   </div>
 }
