@@ -12,6 +12,7 @@ import { Typography } from '@mui/material';
 import {LastActionContext} from "./Contexts"
 
 export default function NavBar() {
+  let showText = false
   return (
     <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0, height: "9.5vh" }}>
       <LastActionContext.Consumer>
@@ -22,9 +23,9 @@ export default function NavBar() {
                 <Stack alignItems={"center"} justifyContent="center"  style={{ width: 50, height: 50 }}>
                   <LearnIcon style={{ width: '30px', height: '30px' }} />
                 </Stack>
-                <Typography>
+                {showText && <Typography>
                   learn
-                </Typography>
+                </Typography>}
               </Stack>
             </IconButton>
             <IconButton onClick={()=>setAction({action: "nav", arguments: "timedpractice"})}>
@@ -33,7 +34,7 @@ export default function NavBar() {
                   <TimedIcon style={{ width: '50px', height: '50px' }} />
                 </Stack>
 
-                <Typography>timed practice</Typography>
+                {showText && <Typography>timed practice</Typography>}
               </Stack>
             </IconButton>
             <IconButton onClick={()=>setAction({action: "nav", arguments: "settings"})}>
@@ -42,7 +43,7 @@ export default function NavBar() {
                   <SettingsIcon style={{ width: '40px', height: '40px' }} />
                 </Stack>
 
-                <Typography>settings</Typography>
+                {showText && <Typography>settings</Typography>}
               </Stack>
             </IconButton>
             <IconButton onClick={()=>setAction({action: "nav", arguments: "profile"})}>
@@ -52,7 +53,7 @@ export default function NavBar() {
                   <Avatar alt="Cindy Baker" src="https://mui.com/static/images/avatar/1.jpg" />
                 </Stack>
 
-                <Typography>profile</Typography>
+                {showText && <Typography>profile</Typography>}
               </Stack>
             </IconButton>
           </Stack>
