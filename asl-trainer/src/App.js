@@ -258,7 +258,7 @@ function FeedCard(props){
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
 
-  return <Card ref={cardRef} className={theClass} sx={{position: "relative", height: "90vh",mb: 2, top: 1}} >
+  return <Card ref={cardRef} className={theClass} sx={{position: "relative", height: "93vh",mb: 2, top: 1}} >
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
