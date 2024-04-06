@@ -13,7 +13,7 @@ import {LastActionContext} from "./Contexts"
 
 export default function NavBar() {
   return (
-    <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0, height: "10vh" }}>
+    <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0, height: "9.5vh" }}>
       <LastActionContext.Consumer>
         {({action,setAction}) => (
           <Stack direction="row" alignItems={"center"} justifyContent="center" spacing={2} >

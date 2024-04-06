@@ -48,6 +48,7 @@ let christineK = {
 let abcItems = allLetters.map((letter)=> ({
         clip: Clips.s3_host + `/clips/Alphabet/${letter.toLowerCase()}.mp4`,
         answerOptions: [letter].concat(randomLettersExcept(3, letter)),  
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: letter,
         type: "MultipleChoiceFeedItem",
@@ -59,6 +60,7 @@ let fingerspellingItems = [
     {
         clip: Clips.s3_host + '/clips/spelling/sp-cowboy.mp4',
         answerOptions: ["COWBOY", "COWARD", "COBRA", "CONNOR"],
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "COWBOY",
         type: "MultipleChoiceFeedItem",
@@ -68,6 +70,7 @@ let fingerspellingItems = [
     {
         clip: Clips.s3_host + '/clips/spelling/sp-brunch.mp4',
         answerOptions: ["BRUNCH", "BRANCH", "BRAWN", "BRONCHITIS"],
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "BRUNCH",
         type: "MultipleChoiceFeedItem",
@@ -77,6 +80,7 @@ let fingerspellingItems = [
     {
         clip: Clips.s3_host + '/clips/spelling/sp-laura.mp4',
         answerOptions: ["LAURA", "LAUNCH", "LAUNDRY", "LAUREN"],
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "LAURA",
         type: "MultipleChoiceFeedItem",
@@ -89,6 +93,7 @@ let vocabItems = [
     {
         clip: Clips.s3_host + '/clips/vocab/boy.mp4',
         answerOptions: ["BOY", "GIRL", "MOM", "DAD"],
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "BOY",
         type: "MultipleChoiceFeedItem",
@@ -98,6 +103,7 @@ let vocabItems = [
     {
         clip: Clips.s3_host + '/clips/vocab/car.mp4',
         answerOptions: ["CAR", "WASH", "PLAY", "GO"],
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "CAR",
         type: "MultipleChoiceFeedItem",
@@ -107,6 +113,7 @@ let vocabItems = [
     {
         clip: Clips.s3_host + '/clips/vocab/play.mp4',
         answerOptions: ["PLAY", "READ", "SING", "PARTY"],
+        arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "PLAY",
         type: "MultipleChoiceFeedItem",
@@ -118,6 +125,7 @@ let vocabItems = [
 let glossItems = [{
   clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
   answerOptions: ["HELLO", "WHAT", "YOUR", "NAME?"],  
+  arrangement: "line",
   english: "Hello, what's your name?",
   //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
   correctAnswer: "WHAT",
@@ -128,6 +136,7 @@ let glossItems = [{
 {
   clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
   answerOptions: ["I", "MAKE", "COFFEE", "STARBUCKS"],
+  arrangement: "line",
   english: "I buy coffee at Starbucks",
   correctAnswer:  "MAKE",
   type: "MultipleChoiceFeedItem",
@@ -138,6 +147,7 @@ let glossItems = [{
 {
   clip: Clips.s3_host + '/clips/error-game/they-will-go-ferry-correct.mp4',
   answerOptions: ["THEY", "WILL", "TAKE-CAR"],
+  arrangement: "line",
   english: "They will take the ferry",
   correctAnswer: "TAKE-CAR",
   type: "MultipleChoiceFeedItem",
@@ -150,6 +160,7 @@ let errorGameItems = [{
     clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
     correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
     answerOptions: ["HELLO", "YOU", "NAME", "WHAT?"],
+    arrangement: "line",
     english: "Hello, what's your name?",
     correctAnswer: "YOU",
     type: "MultipleChoiceFeedItem",
@@ -161,6 +172,7 @@ let errorGameItems = [{
     correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
     english: "I buy coffee at Starbucks",
     answerOptions: ["I", "BUY", "COFFEE", "STARBUCKS"],
+    arrangement: "line",
     correctAnswer: "I",
     type: "MultipleChoiceFeedItem",
     producer: christineK,
@@ -172,6 +184,7 @@ let errorGameItems = [{
     correctClip: Clips.s3_host + '/clips/error-game/they-will-go-ferry-correct.mp4',
     english: "He will take the ferry",
     answerOptions: ["THEY", "GO", "FERRY"],
+    arrangement: "line",
     correctAnswer: "GO",
     type: "MultipleChoiceFeedItem",
     producer: christineK,

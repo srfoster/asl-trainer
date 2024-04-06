@@ -17,7 +17,7 @@ import {HashRouter as Router, Routes, Route, Link} from "react-router-dom"
 import useWindowSize from 'react-use/lib/useWindowSize'
 import Confetti from 'react-confetti'
 import { Stack, Typography } from '@mui/material';
-import Fade from '@mui/material/Fade';
+import Grid from '@mui/material/Grid';
 import NavBar from "./NavBar" 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -127,6 +127,7 @@ function SettingsFeedItem(props){
 
 function MultipleChoiceFeedItem(props){
   let [wordSelection, setWordSelection] = React.useState(null)
+  let [progress, setProgress] = React.useState(0)
 
   let gotItRight = undefined;
   if(wordSelection !== null) gotItRight = (wordSelection === props.card.correctAnswer)
@@ -139,57 +140,68 @@ function MultipleChoiceFeedItem(props){
 
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
-      <CardMedia style={{height: "80vh", position: "relative"}}>
-        <Stack alignItems={"center"}>
-          <Typography variant="h6" sx={{p: 1, m: 0}}>
-            {props.card.title}
+        <CardMedia style={{height: "100%", position: "relative"}}>
+          <Stack alignItems={"center"}>
+            <Typography variant="h6" sx={{p: 1, m: 0}}>
+              {props.card.title}
             </Typography>
-        </Stack>
+          </Stack>
 
-        {Math.abs(props.myIndex - props.currentIndex) < 2 &&
-        <Video startPlaying={props.iAmCurrent} url={props.card.clip} producer={props.card.producer} />}
+          {Math.abs(props.myIndex - props.currentIndex) < 2 &&
+            <Video startPlaying={props.iAmCurrent} url={props.card.clip} producer={props.card.producer} setProgress={setProgress} />}
 
-        <LastActionContext.Consumer>
-          {({action,setAction})=>(
-            <Stack style={{position: "absolute", bottom: 100, right: 0}}>
-              <IconButton aria-label="delete" onClick={(e)=>{console.log("hello");setAction({action: "heart", arguments: props.card})}}>
-                <HeartIcon style={{ width: '50px', height: '50px' }}/>
-              </IconButton>
-              <IconButton aria-label="comment"  onClick={(e)=>{setAction({action: "comment", arguments: props.card})}}>
-                <CommentIcon style={{ width: '50px', height: '50px' }}/>
-              </IconButton>
-              <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "setSpeed", arguments: props.card})}}>
-                <SpeedIcon style={{ width: '50px', height: '50px' }}/>
-              </IconButton>
-              <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "learnMore", arguments: props.card})}}>
-                <SchoolIcon style={{ width: '50px', height: '50px' }}/>
-              </IconButton>
-            </Stack>
-          )}
-        </LastActionContext.Consumer>
-      </CardMedia>
-      <CardContent>
-        <Stack alignItems={"center"}>
-          <Typography variant="h6" sx={{p: 1}}>
-            </Typography>
-            <ClickableGloss onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
-        </Stack>
-      </CardContent>
+          <FloatingVideoIcons style={{position: "absolute", bottom: "25vh", right: 0}} />
+        </CardMedia>
+        <div style={{position: "absolute", width: "100%", bottom: "20vh", left: 0}}>
+          <div style={{padding: 10}}>
+            <VideoAvatar producer={props.card.producer} />
+          </div>
+          <div style={{}}>
+            <VideoProgress progress={progress} />
+          </div>
+        </div>
+        <div style={{position: "absolute", backgroundColor: "rgba(0,0,0,0.75)", width: "100%", bottom: 0, left: 0, height: "20vh"}}>
+          <Stack alignItems={"center"} style={{margin: 20}}>
+            <ClickableGloss 
+              arrangement={props.card.arrangement}
+              onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
+          </Stack>
+        </div>
     </FeedCard>
   );
 }
 
+let FloatingVideoIcons = (props)=> {
+  return <LastActionContext.Consumer>
+    {({action,setAction})=>(
+      <Stack style={{...props.style}}>
+        <IconButton aria-label="delete" onClick={(e)=>{console.log("hello");setAction({action: "heart", arguments: props.card})}}>
+          <HeartIcon style={{ width: '50px', height: '50px' }}/>
+        </IconButton>
+        <IconButton aria-label="comment"  onClick={(e)=>{setAction({action: "comment", arguments: props.card})}}>
+          <CommentIcon style={{ width: '50px', height: '50px' }}/>
+        </IconButton>
+        <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "setSpeed", arguments: props.card})}}>
+          <SpeedIcon style={{ width: '50px', height: '50px' }}/>
+        </IconButton>
+        <IconButton aria-label="comment" onClick={(e)=>{setAction({action: "learnMore", arguments: props.card})}}>
+          <SchoolIcon style={{ width: '50px', height: '50px' }}/>
+        </IconButton>
+      </Stack>
+    )}
+  </LastActionContext.Consumer>
+}
 
-function Video({startPlaying, url, producer}){
+
+function Video({startPlaying, url, setProgress}){
   let [playing, setPlaying] = React.useState(false)
-  let [progress, setProgress] = React.useState(0)
 
   useEffect(()=>{
     setPlaying(startPlaying)
   },[startPlaying])
 
-  return <div style={{height: "100%"}} onClick={()=>{setPlaying(!playing)}}>
-    <div style={{marginLeft: "-100%"}}>
+  return <div style={{height: "110%"}} onClick={()=>{setPlaying(!playing)}}>
+    <div style={{marginLeft: "-120%"}}>
       <ReactPlayer
           id={url}
           playing={playing}
@@ -197,12 +209,22 @@ function Video({startPlaying, url, producer}){
           loop={true}
           url={ url}
           controls={false}
-          width="150%"
+          width="160%"
           height="100%"
           onProgress={(p)=>{setProgress(p.played)}}
         />
     </div>
-      <div style={{position: "absolute", bottom: 10, left: 4}} >
+  </div>
+}
+
+let VideoProgress = ({progress}) => {
+  return <div style={{width: "100%", backgroundColor: "black", height: 4}}>
+     <div style={{ width: (progress * 100) + "%", height: 4, backgroundColor: "white", borderRadius: 10}}></div>
+  </div>
+}
+
+let VideoAvatar = ({producer, style}) => {
+  return <div style={{...style}} >
         <Stack direction="row" alignItems={"center"} spacing={2}>
           <Avatar src={producer.avatar} />
           <Typography variant="h6">
@@ -210,8 +232,6 @@ function Video({startPlaying, url, producer}){
           </Typography>
         </Stack>
       </div>
-      <div style={{width: (progress*100)+"%", height: 4, backgroundColor: "white", borderRadius: 10, position: "absolute", bottom: 0}}></div>
-  </div>
 }
 
 function FeedCard(props){
@@ -238,7 +258,7 @@ function FeedCard(props){
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
 
-  return <Card ref={cardRef} className={theClass} sx={{height: "90vh",mb: 2, mt: 2}} >
+  return <Card ref={cardRef} className={theClass} sx={{position: "relative", height: "90vh",mb: 2, top: 1}} >
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
@@ -247,16 +267,32 @@ function FeedCard(props){
 function ClickableGloss(props){
   let [wordSelection, setWordSelection] = React.useState(null)
 
-  return <Stack direction="row" spacing={2}>{
-    props.gloss.map((x,i)=>{
-     return <Button 
-       variant="contained"
-       color={x !== wordSelection ? "primary" : "secondary"}
-       key={i} onClick={() => {
-        setWordSelection(x)
-        props.onClick(x)
-      }}>{x}</Button>
-  })}</Stack>
+  if(props.arrangement == "line")
+    return <Stack direction="row" spacing={2}>{
+      props.gloss.map((x,i)=>{
+      return <Button 
+        variant="contained"
+        color={x !== wordSelection ? "primary" : "secondary"}
+        key={i} onClick={() => {
+          setWordSelection(x)
+          props.onClick(x)
+        }}>{x}</Button>
+    })}</Stack>
+  
+  if(props.arrangement == "grid")
+    return <Grid container spacing={2}>{
+      props.gloss.map((x,i)=>{
+      return <Grid item xs={6}>
+        <Button 
+          style={{width: "100%"}}
+          variant="contained"
+          color={x !== wordSelection ? "primary" : "secondary"}
+          key={i} onClick={() => {
+            setWordSelection(x)
+            props.onClick(x)
+          }}>{x}</Button>
+      </Grid>
+    })}</Grid>
 }
 
 
