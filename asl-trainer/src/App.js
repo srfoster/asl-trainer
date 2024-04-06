@@ -201,7 +201,7 @@ function Video({startPlaying, url, setProgress}){
   },[startPlaying])
 
   return <div style={{}} onClick={()=>{setPlaying(!playing)}}>
-    <div style={{}}>
+    <div style={{height: "90vh"}}>
       {<ReactPlayer
           id={url}
           playing={playing}
@@ -209,8 +209,8 @@ function Video({startPlaying, url, setProgress}){
           loop={true}
           url={ url}
           controls={false}
-          width={"100%"}
-          height={"100%"}
+          width="100%"
+          height="100%"
           onProgress={(p)=>{setProgress(p.played)}}
 /> }
     </div>
