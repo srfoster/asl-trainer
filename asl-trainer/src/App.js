@@ -33,9 +33,7 @@ import {aslItems} from "./feedItems"
 import {LastActionContext} from "./Contexts"
 
 import { shuffle } from './utils';
-import { FitScreen } from '@mui/icons-material';
-
-import { start } from '@popperjs/core';
+import {heights} from "./config"
 
 const darkTheme = createTheme({
   palette: {
@@ -140,18 +138,14 @@ function MultipleChoiceFeedItem(props){
 
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
-        <CardMedia style={{height: "100%", position: "relative"}}>
-          <Stack alignItems={"center"}>
-            <Typography variant="h6" sx={{p: 1, m: 0}}>
-              {props.card.title}
-            </Typography>
-          </Stack>
-
+          <div
+          style={{position: "relative", height: "100%"}}
+           >
           {Math.abs(props.myIndex - props.currentIndex) < 2 &&
             <Video startPlaying={props.iAmCurrent} url={props.card.clip} producer={props.card.producer} setProgress={setProgress} />}
+          </div>
 
           <FloatingVideoIcons style={{position: "absolute", bottom: "25vh", right: 0}} />
-        </CardMedia>
         <div style={{position: "absolute", width: "100%", bottom: "20vh", left: 0}}>
           <div style={{padding: 10}}>
             <VideoAvatar producer={props.card.producer} />
@@ -160,10 +154,13 @@ function MultipleChoiceFeedItem(props){
             <VideoProgress progress={progress} />
           </div>
         </div>
-        <div style={{position: "absolute", backgroundColor: "rgba(0,0,0,0.75)", width: "100%", bottom: 0, left: 0, height: "20vh"}}>
-          <Stack alignItems={"center"} style={{margin: 20}}>
+        <div style={{position: "absolute", 
+        backgroundColor: "rgba(0,0,0,0.75)", 
+        width: "101%", bottom: 0, left: 0, height: "20vh", display: "flex"}}>
+          <Stack justifyContent={"center"} alignItems={"center"} style={{margin: 20, flexGrow:  1}}>
             <ClickableGloss 
               arrangement={props.card.arrangement}
+              correctAnswer={props.card.correctAnswer}
               onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
           </Stack>
         </div>
@@ -200,8 +197,10 @@ function Video({startPlaying, url, setProgress}){
     setPlaying(startPlaying)
   },[startPlaying])
 
-  return <div style={{}} onClick={()=>{setPlaying(!playing)}}>
-    <div style={{height: "90vh"}}>
+  return <>
+    <div className="react-player-container" style={{height: "100%"}}
+     onClick={()=>{setPlaying(!playing)}}
+    >
       {<ReactPlayer
           id={url}
           playing={playing}
@@ -209,12 +208,12 @@ function Video({startPlaying, url, setProgress}){
           loop={true}
           url={ url}
           controls={false}
-          width="100%"
           height="100%"
+          width="100%"
           onProgress={(p)=>{setProgress(p.played)}}
 /> }
     </div>
-  </div>
+  </>
 }
 
 let VideoProgress = ({progress}) => {
@@ -258,7 +257,7 @@ function FeedCard(props){
   if(props.gotItRight === true)  theClass = "correct-card"
   if(props.gotItRight === false) theClass = "incorrect-card"
 
-  return <Card ref={cardRef} className={theClass} sx={{position: "relative", height: "93vh",mb: 2, top: 1}} >
+  return <Card ref={cardRef} className={theClass} sx={{position: "relative", height: heights.card, mb: 2, top: 1}} >
     {props.gotItRight && <MyConfetti />}
     {props.children}
   </Card>
@@ -267,12 +266,24 @@ function FeedCard(props){
 function ClickableGloss(props){
   let [wordSelection, setWordSelection] = React.useState(null)
 
+  let color = (x)=>{
+    if(wordSelection === x)
+    {
+      if(x === props.correctAnswer)
+        return "success"
+      else
+        return "error"
+    }
+    return "primary"
+  }
+
   if(props.arrangement == "line")
     return <Stack direction="row" spacing={2}>{
       props.gloss.map((x,i)=>{
+
       return <Button 
         variant="contained"
-        color={x !== wordSelection ? "primary" : "secondary"}
+        color={color(x)}
         key={i} onClick={() => {
           setWordSelection(x)
           props.onClick(x)
@@ -286,7 +297,7 @@ function ClickableGloss(props){
         <Button 
           style={{width: "100%"}}
           variant="contained"
-          color={x !== wordSelection ? "primary" : "secondary"}
+          color={color(x)}
           key={i} onClick={() => {
             setWordSelection(x)
             props.onClick(x)

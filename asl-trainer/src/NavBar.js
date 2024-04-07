@@ -9,12 +9,14 @@ import TimedIcon from '@mui/icons-material/ToggleOff';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ProfileIcon from '@mui/icons-material/AccountCircle';
 import { Typography } from '@mui/material';
+
 import {LastActionContext} from "./Contexts"
+import {heights} from "./config"
 
 export default function NavBar() {
   let showText = false
   return (
-    <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0, height: "7vh" }}>
+    <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0, height: heights.navbar }}>
       <LastActionContext.Consumer>
         {({action,setAction}) => (
           <Stack direction="row" alignItems={"center"} justifyContent="center" spacing={5} >

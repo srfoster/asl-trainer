@@ -1,4 +1,8 @@
 
+.unanswered-card {
+  border: 1px solid rgba(0,0,0,0.75);
+}
+
 .correct-card {
   animation: correct-card-transition 1s linear;
   animation-fill-mode: forwards;
@@ -34,4 +38,8 @@
 
 body{
   background-color: #282c34;
+}
+
+.react-player-container video{
+  object-fit: cover;
 }
