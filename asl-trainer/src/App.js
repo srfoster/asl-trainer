@@ -34,6 +34,7 @@ import {LastActionContext} from "./Contexts"
 
 import { shuffle } from './utils';
 import {heights} from "./config"
+import useCurrentColorScheme from '@mui/system/cssVars/useCurrentColorScheme';
 
 const darkTheme = createTheme({
   palette: {
@@ -145,7 +146,7 @@ function MultipleChoiceFeedItem(props){
             <Video startPlaying={props.iAmCurrent} url={props.card.clip} producer={props.card.producer} setProgress={setProgress} />}
           </div>
 
-          <FloatingVideoIcons style={{position: "absolute", bottom: "25vh", right: 0}} />
+          {/* <FloatingVideoIcons style={{position: "absolute", bottom: "25vh", right: 0}} /> */}
         <div style={{position: "absolute", width: "100%", bottom: "20vh", left: 0}}>
           <div style={{padding: 10}}>
             <VideoAvatar producer={props.card.producer} />
@@ -250,7 +251,8 @@ function FeedCard(props){
 
     observer.observe(cardRef.current)
 
-    return ()=>{observer && cardRef && observer.unobserve(cardRef.current)}
+    return ()=>{
+      observer && cardRef && cardRef.current && observer.unobserve(cardRef.current)}
   }, [cardRef])
 
   let theClass = "unanswered-card"
@@ -309,12 +311,24 @@ function ClickableGloss(props){
 
 export default function App() {
   let [lastAction, setLastAction] = React.useState(null)
+  let [lastNav, setLastNav] = React.useState("feed")
 
   let setActionAndDoStuff = (action)=>{ 
     console.log("setting action", action)
 
     setLastAction(action)
+
+    if(action.action == "nav")
+      setLastNav(action.arguments)
   }
+
+  let currentComponent;
+  
+  if(lastNav == "feed")
+    currentComponent = <Feed />
+  else if(lastNav == "settings")
+    currentComponent = <Settings/>
+
 
 
   return (
@@ -325,7 +339,7 @@ export default function App() {
             <NavBar />
             <Container maxWidth="md" style={{padding: 1}}>
               <Routes>
-                <Route path="/" element={<Feed />} />
+                <Route path="/" element={currentComponent} />
               </Routes>
             </Container>
           </Router>    
@@ -434,3 +448,14 @@ let MyConfetti = () => {
   )
 }
 
+
+
+let Settings = (props) =>{
+   
+  return <Card>
+    <CardHeader title="Settings!" />
+    <CardContent>
+      Stuff goes here
+    </CardContent>
+  </Card>
+}
