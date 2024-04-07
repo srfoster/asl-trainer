@@ -30,7 +30,7 @@ export default function NavBar() {
                 </Typography>}
               </Stack>
             </IconButton>
-            <IconButton onClick={()=>setAction({action: "nav", arguments: "timedpractice"})}>
+            {/* <IconButton onClick={()=>setAction({action: "nav", arguments: "timedpractice"})}>
               <Stack alignItems={"center"}>
                 <Stack alignItems={"center"} justifyContent="center"  style={{ width: 50, height: 50 }}>
                   <TimedIcon style={{ width: '50px', height: '50px' }} />
@@ -38,7 +38,7 @@ export default function NavBar() {
 
                 {showText && <Typography>timed practice</Typography>}
               </Stack>
-            </IconButton>
+            </IconButton> */}
             <IconButton onClick={()=>setAction({action: "nav", arguments: "settings"})}>
               <Stack alignItems={"center"}>
                 <Stack alignItems={"center"} justifyContent="center"  style={{ width: 50, height: 50 }}>
