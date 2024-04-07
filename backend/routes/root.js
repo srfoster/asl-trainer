@@ -5,9 +5,9 @@ const knex = require('knex')({
   connection: {
     host: '127.0.0.1',
     port: 3306,
-    user: 'your_database_user',
-    password: 'your_database_password',
-    database: 'myapp_test',
+    user: 'root',
+    password: process.env.DB_PASSWORD,
+    database: 'lyrnify',
   },
 });
 
@@ -17,6 +17,7 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.get('/feed-next', async function (request, reply) {
-    return { feedNext: true }
+    let items = await knex("feed_items").select("*")
+    return items
   })
 }
