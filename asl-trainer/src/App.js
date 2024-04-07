@@ -26,8 +26,16 @@ import CommentIcon from '@mui/icons-material/Comment';
 import SpeedIcon from '@mui/icons-material/Speed';
 import SchoolIcon from '@mui/icons-material/School';
 import InfoIcon from '@mui/icons-material/Info';
-
+import SettingsIcon from '@mui/icons-material/Settings';
 import { PieChart } from '@mui/x-charts/PieChart';
+import { Box} from '@mui/system';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import { Radio } from '@mui/material';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
 
 import {aslItems} from "./feedItems"
 import {LastActionContext} from "./Contexts"
@@ -453,9 +461,51 @@ let MyConfetti = () => {
 let Settings = (props) =>{
    
   return <Card>
-    <CardHeader title="Settings!" />
     <CardContent>
-      Stuff goes here
+      <Stack align="center" spacing={5}>
+        <IconButton >
+            <SettingsIcon style={{ width: '200px', height: '200px' }} />
+        </IconButton>    
+        <Typography variant="h3">Settings</Typography>
+        {/* add padding */}
+        <Stack>
+          <Box
+              sx={{
+                bgcolor: 'primary',
+                boxShadow: 1,
+                borderRadius: 2,
+                p: 2,
+                 }}>
+            <Typography variant="h4">Activities</Typography>
+          </Box>
+       <FormControl>
+        <FormGroup >
+          <FormControlLabel control={<Checkbox color="success" sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}/>} label="Alphabet"/>
+          <FormControlLabel control={<Checkbox color="success" sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}/>} label="Vocabulary"/>
+          <FormControlLabel control={<Checkbox color="success" sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}/>} label="Sentences"/>
+        </FormGroup>
+        </FormControl>
+        </Stack>
+        <Stack>
+          <Box
+              sx={{
+                bgcolor: 'primary',
+                boxShadow: 1,
+                borderRadius: 2,
+                p: 2,
+                 }}>
+            <Typography variant="h4">Difficulty Level</Typography>
+          </Box>
+       <FormControl>
+       <FormLabel>Show me videos...</FormLabel>
+       <FormGroup >
+          <FormControlLabel control={<Checkbox color="success" sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}/>} label="Below my skill level"/>
+          <FormControlLabel control={<Checkbox color="success" sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}/>} label="At my skill level"/>
+          <FormControlLabel control={<Checkbox color="success" sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}/>} label="Above my skill level"/>
+        </FormGroup>
+        </FormControl>
+        </Stack>
+      </Stack> 
     </CardContent>
   </Card>
 }
