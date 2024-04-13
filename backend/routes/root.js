@@ -11,13 +11,32 @@ const knex = require('knex')({
   },
 });
 
+
+let items = require("./temp.js")  
+let i = 0
+
+let cors = require('@fastify/cors')
+
 module.exports = async function (fastify, opts) {
+  await fastify.register(cors, { 
+		// put your options here
+	})
+
   fastify.get('/', async function (request, reply) {
     return { root: true }
   })
 
   fastify.get('/feed-next', async function (request, reply) {
-    let items = await knex("feed_items").select("*")
-    return items
+    
+//    let items = await knex("feed_items").select("*") 
+
+    let num = request.params.number
+
+    let ret = items.aslItems.slice(i, i + (num || 1))
+    i++
+    console.log(ret)
+    return ret
+	
+    //return items
   })
 }
