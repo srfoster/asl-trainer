@@ -3,8 +3,6 @@ import ReactPlayer from 'react-player'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardMedia from '@mui/material/CardMedia';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import Container from '@mui/material/Container';
@@ -377,7 +375,11 @@ function Feed(){
   let [currentItem, setCurrentItem] = React.useState(0)
 
   let scrollableRef = React.useRef(null)
-  let [items, setItems] = React.useState(aslItems.slice(0,3))
+  let [items, setItems] = React.useState([])
+
+  useEffect(()=>{
+    fetchData(3)
+  }, [])
 
   useEffect(()=>{
     if(currentItem === items.length - 2){
@@ -388,9 +390,8 @@ function Feed(){
       scrollableRef.current.addEventListener("touchmove", disable, {passive: false})
 
       setTimeout(()=>{
-         
-        //TODO: Fetch from our server: http://54.156.128.216:8080/feed-next
-        fetchData()
+        fetchData(1)
+
         //Re-enable scroll
         scrollableRef.current.removeEventListener("touchmove", disable, {passive: false})
 
@@ -420,8 +421,15 @@ function Feed(){
   }
 
 
-  let fetchData = ()=>{
-    setItems(items.concat(aslItems.slice(items.length, items.length + 1)))
+  let fetchData = (num)=>{
+    let fetchFrom = "http://54.156.128.216:8080/feed-next?number=" + num 
+
+    fetch(fetchFrom)
+    .then(response => response.json())
+    .then(nextItems => {
+      console.log("nextItem", nextItems)
+      setItems(items.concat(nextItems))
+    })
   }
 
   return <div ref={scrollableRef} id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
