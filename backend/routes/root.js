@@ -30,11 +30,11 @@ module.exports = async function (fastify, opts) {
     
 //    let items = await knex("feed_items").select("*") 
 
-    let num = request.params.number
+    let num = request.query.number
 
     let ret = items.aslItems.slice(i, i + (num || 1))
     i++
-    console.log(ret)
+    console.log("Num: "+ num, ret)
     return ret
 	
     //return items
