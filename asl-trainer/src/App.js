@@ -378,6 +378,7 @@ function Feed(){
   let [items, setItems] = React.useState([])
 
   useEffect(()=>{
+    console.log("fetching initial...")
     fetchData(3)
   }, [])
 
