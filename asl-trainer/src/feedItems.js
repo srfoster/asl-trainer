@@ -112,7 +112,7 @@ let vocabItems = [
     },
     {
         clip: Clips.s3_host + '/clips/vocab/play.mp4',
-        answerOptions: ["PLAY", "READ", "SING", "PARTY"],
+        answerOptions: ["PLAY", "READ", "SING", "GO"],
         arrangement: "grid",
         randomizeOptions: true,
         correctAnswer: "PLAY",

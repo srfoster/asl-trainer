@@ -95,7 +95,7 @@ function PlainTextFeedItem(props) {
   }
 
   let icon = stringToIcon(props.card.params.icon)
-  return <FeedCard {...props} gotItRight={undefined}>
+  return <FeedCard {...props} gotItRight={undefined} >
     <div style={{ fontSize: 32, padding: 5 }}>
       <Stack
         direction="row"
@@ -107,7 +107,7 @@ function PlainTextFeedItem(props) {
       </Stack>
     </div>
     <CardContent >
-      <div style={{ fontSize: 36, fontWeight: "lighter", textAlign: 'center' }}
+      <div style={{ fontSize: 36, fontWeight: "normal", textAlign: 'center' }}
         dangerouslySetInnerHTML={{ __html: props.card.text }}>
       </div>
     </CardContent>
@@ -173,7 +173,7 @@ function MultipleChoiceFeedItem(props) {
           <ClickableGloss
             arrangement={props.card.arrangement}
             correctAnswer={props.card.correctAnswer}
-            onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
+            onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions}/>
         </Stack>
       </div>
     </FeedCard>
@@ -306,9 +306,9 @@ function ClickableGloss(props) {
   if (props.arrangement == "grid")
     return <Grid container spacing={2}>{
       props.gloss.map((x, i) => {
-        return <Grid item xs={6}>
+        return <Grid item xs={6} >
           <Button
-            style={{ width: "100%" }}
+            style={{ width: "100%", fontSize: '30px' }}
             variant="contained"
             color={color(x)}
             key={i} onClick={() => {
@@ -339,7 +339,8 @@ export default function App() {
     currentComponent = <Feed />
   else if (lastNav == "settings")
     currentComponent = <Settings />
-
+  else if (lastNav == "profile")
+    currentComponent = <Profile />
 
 
   return (
@@ -461,16 +462,59 @@ let MyConfetti = () => {
 }
 
 
+let Profile = (props) => {
+  return <Card sx={{ overflow: "scroll", height: "93vh", backgroundColor: "#F5F1ED" }}>
+    <CardContent>
+      <Stack alignItems="center" padding={5} spacing={5}>
+        <Avatar alt="Cindy Baker" src="https://mui.com/static/images/avatar/1.jpg"
+          sx={{ width: 150, height: 150 }} />
+        <Typography variant="h6">Username</Typography>
+      </Stack>
+      <Stack alignItems="center" spacing={2}>
+        <Box
+          sx={{
+            backgroundColor: "#ff967c",
+            borderRadius: 2,
+            p: 1,
+            minWidth: 250,
+            borderRadius: '25px'
+          }}>
+          <Typography variant="h4" align="center">Level</Typography>
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: "#ff967c",
+            borderRadius: 2,
+            p: 1,
+            minWidth: 250,
+            borderRadius: '25px'
+          }}>
+          <Typography variant="h4" align="center">Stats</Typography>
+        </Box>
+        <Typography align="center" variant="h6">You answered 15 questions in the last 2 days. You're on a roll!</Typography>
+        <Box
+          sx={{
+            backgroundColor: "#ff967c",
+            borderRadius: 2,
+            p: 1,
+            minWidth: 250,
+            borderRadius: '25px'
+          }}>
+          <Typography variant="h4" align="center">Account Info</Typography>
+        </Box>
+      </Stack>
+    </CardContent>
+  </Card>
+}
+
+
 
 let Settings = (props) => {
 
-  return <Card sx={{ minHeight: 1200, backgroundColor: "#F5F1ED" }}>
+  return <Card sx={{ overflow: "scroll", height: "93vh", backgroundColor: "#F5F1ED" }}>
     <CardContent>
-      <Stack align="center" spacing={5}>
-        <IconButton >
-          <SettingsIcon style={{ width: '200px', height: '200px' }} />
-        </IconButton>
-        <Typography variant="h3">Settings</Typography>
+      <Stack align="center" padding={2} spacing={5}>
+        <Typography variant="h2">Settings</Typography>
         <Stack alignItems={"center"}>
           <Box
             sx={{
