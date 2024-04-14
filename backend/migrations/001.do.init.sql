@@ -1,0 +1,7 @@
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT,
+  data TEXT NOT NULL,
+  title VARCHAR(50) NOT NULL,
+  description TEXT NOT NULL,
+  PRIMARY KEY (id)
+)

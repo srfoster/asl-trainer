@@ -23,6 +23,7 @@
     "fastify-plugin": "^4.0.0",
     "knex": "^3.1.0",
     "mysql": "^2.18.1",
+    "postgrator": "^7.2.0",
     "seedrandom": "^3.0.5"
   }
 }
