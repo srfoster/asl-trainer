@@ -1,18 +1,10 @@
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE,
     profile_pic_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE user_ratings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    prompt_id INT NOT NULL,
-    rating INT DEFAULT 1000, 
-    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE prompts (
@@ -20,9 +12,17 @@ CREATE TABLE prompts (
     prompt_text VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE user_ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    prompt_id INT NOT NULL,
+    rating INT DEFAULT 1000, 
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (prompt_id) REFERENCES prompts(id)
+);
+
 CREATE TABLE feed_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
     clip VARCHAR(255) NOT NULL,
     prompt_id INT NOT NULL,
 		answer_options TEXT NOT NULL,  
@@ -36,7 +36,8 @@ CREATE TABLE feed_items (
 
     rating INT DEFAULT 1000,
 
-    FOREIGN KEY (producer_id) REFERENCES users(id)
+    FOREIGN KEY (producer_id) REFERENCES users(id),
+    FOREIGN KEY (prompt_id)   REFERENCES prompts(id)
 );
 
 CREATE TABLE attempts (
