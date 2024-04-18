@@ -37,6 +37,8 @@ import { Radio } from '@mui/material';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
 import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
+import WavingHandIcon from '@mui/icons-material/WavingHand';
 
 import { aslItems } from "./feedItems"
 import { LastActionContext } from "./Contexts"
@@ -173,7 +175,7 @@ function MultipleChoiceFeedItem(props) {
           <ClickableGloss
             arrangement={props.card.arrangement}
             correctAnswer={props.card.correctAnswer}
-            onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions}/>
+            onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
         </Stack>
       </div>
     </FeedCard>
@@ -502,6 +504,62 @@ let Profile = (props) => {
           }}>
           <Typography variant="h4" align="center">Account Info</Typography>
         </Box>
+      </Stack>
+      <Stack alignItems="center" padding={2} spacing={3}>
+        <Typography align="center" variant="h2">Welcome to Lyrnify</Typography>
+        <WavingHandIcon sx={{fontSize: 100}}/>
+        <Button
+          sx={{
+            backgroundColor: "#ff967c",
+            borderRadius: 2,
+            p: 1,
+            minWidth: 250,
+            borderRadius: '25px',
+            boxShadow: 3,
+            textTransform: "none",
+            color: "black"
+          }}>
+          <Typography variant="h4" align="center">Create Account</Typography>
+        </Button>
+        <Button
+          sx={{
+            backgroundColor: "#ff967c",
+            borderRadius: 2,
+            p: 1,
+            minWidth: 250,
+            borderRadius: '25px',
+            boxShadow: 3,
+            textTransform: "none",
+            color: "black"
+          }}>
+          <Typography variant="h4" align="center">Log in</Typography>
+        </Button>
+      </Stack>
+
+
+      <Stack>
+        <Typography variant="h4">Log in</Typography>
+        <TextField id="standard-basic" label="email" variant="standard" />
+        <TextField id="standard-basic" label="password" variant="standard" />
+      </Stack>
+      <Stack align="right">
+        <Link href="#">forgot password?</Link>
+      </Stack>
+      <Stack direction="row" spacing={1}>
+        <Typography>New here?</Typography>
+        <Link href="#">Create account</Link>
+      </Stack>
+
+      <Stack>
+        <Typography variant="h4">Create Account</Typography>
+        <TextField id="standard-basic" label="username" variant="standard" />
+        <TextField id="standard-basic" label="email" variant="standard" />
+        <TextField id="standard-basic" label="password" variant="standard" />
+        <TextField id="standard-basic" label="confirm password" variant="standard" />
+      </Stack>
+      <Stack direction="row" spacing={1}>
+        <Typography>Already have an account?</Typography>
+        <Link href="#">Log in</Link>
       </Stack>
     </CardContent>
   </Card>
