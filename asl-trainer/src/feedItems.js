@@ -1,5 +1,6 @@
 import { shuffle } from "./utils"
 import Clips from "./Clips" 
+
 //import { Typography } from "@mui/material"
 
 let welcomeInstructions = "<p>This is an early prototype of an app for learning ASL.</p> <p>Thanks for helping us test it!</p>"
@@ -18,6 +19,7 @@ let instructions = (title, text, params)=>{
     params: params || {}
   }
 }
+
 
 let allLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
                   "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", 
@@ -44,6 +46,7 @@ let christineK = {
     username: "christineK",
     avatar: Clips.s3_host + "/profile-pics/christine.png"
 }
+
 
 let abcItems = allLetters.map((letter)=> ({
         clip: Clips.s3_host + `/clips/Alphabet/${letter.toLowerCase()}.mp4`,

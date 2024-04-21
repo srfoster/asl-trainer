@@ -39,6 +39,7 @@ import FormLabel from '@mui/material/FormLabel';
 import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import WavingHandIcon from '@mui/icons-material/WavingHand';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { aslItems } from "./feedItems"
 import { LastActionContext } from "./Contexts"
@@ -135,6 +136,17 @@ function SettingsFeedItem(props) {
   </FeedCard>
 }
 
+function FloatingHeader() {
+return(
+  <Stack sx={{ alignItems: "center", top: 0, bottom: 'auto', height: heights.navbar, backgroundColor: '#636F73' }}>
+        <Stack direction="row">
+          <Typography>Activity Type</Typography>
+          <InfoOutlinedIcon />
+        </Stack>
+      </Stack>  
+      )
+}
+
 function MultipleChoiceFeedItem(props) {
   let [wordSelection, setWordSelection] = React.useState(null)
   let [progress, setProgress] = React.useState(0)
@@ -148,8 +160,11 @@ function MultipleChoiceFeedItem(props) {
     if (gotItRight) props.setGotItRight(true)
   }, [gotItRight])
 
+
+
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
+      <FloatingHeader/>
       <div
         style={{ position: "relative", height: "100%" }}
       >
@@ -361,7 +376,9 @@ export default function App() {
       </ThemeProvider>
     </>
   );
+
 }
+
 
 function typeToComponent(s) {
   return {
@@ -507,7 +524,7 @@ let Profile = (props) => {
       </Stack>
       <Stack alignItems="center" padding={2} spacing={3}>
         <Typography align="center" variant="h2">Welcome to Lyrnify</Typography>
-        <WavingHandIcon sx={{fontSize: 100}}/>
+        <WavingHandIcon sx={{ fontSize: 100 }} />
         <Button
           sx={{
             backgroundColor: "#ff967c",
