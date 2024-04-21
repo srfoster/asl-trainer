@@ -2,45 +2,34 @@
 const knex = require('./knexfile');
 
 class Importer {
-   /*
-
-{
-  title: 'Alphabet Practice'
-  clip: 'https://asl-trainer.s3.us-west-1.amazonaws.com/clips/Alphabet/g.mp4',
-  answerOptions: [ 'G', 'V', 'F', 'A' ],
-  arrangement: 'grid',
-  randomizeOptions: true,
-  correctAnswer: 'G',
-  type: 'MultipleChoiceFeedItem',
-  producer: {
-    username: 'lalahep',
-    profile_pic_url: 'https://asl-trainer.s3.us-west-1.amazonaws.com/profile-pics/laura.png'
-  },
-}
-
-   */
 
   static async importFeedItem(item){
-    console.log(item)
+    console.log("Importing...",item)
 
     let producerImport = item.producer
    
-    let producer = await UsersDAO.findByUsername(producerImport.username) 
+    let producer = (await UsersDAO.findByUsername(producerImport.username))
+
+    console.log("Producer found?", producer)
 
     if(!producer){
+       console.log("Creating producer", producerImport)
        await UsersDAO.create(producerImport)
        producer = await UsersDAO.findByUsername(producerImport.username) 
     }
 
-    let prompt = await PromptDAO.findByPromptText(item.prompt) 
+    delete item["producer"]
 
-    if(!prompt){
-       await PromptDAO.create({prompt_text: item.prompt})
-       prompt = await PromptDAO.findByPromptText(item.prompt) 
+    let category = await CategoriesDAO.findByCategoryName(item.category) 
+
+    if(!category){
+       await CategoriesDAO.create({name: item.category})
     }
 
-    FeedItemsDAO.create({...item, prompt_id: prompt.id, producer_id: producer.id, answer_options: item.answer_options.join("$$$$$")}) 
+    delete item["category"]
+    delete item["type"]
 
+    await FeedItemsDAO.create({...item, producer_id: producer.id, answer_options: item.answer_options.join("$$$$$")}) 
      
   }
 }
@@ -51,15 +40,20 @@ class UsersDAO {
     }
 
     static async findById(id) {
-        return knex('users').where('id', id).first();
+        return await knex('users').where('id', id).first();
     }
 
     static async findByUsername(username) {
-        return knex('users').where('username', username).first();
+        console.log("Looking for user with name", username)
+        let ret = await knex('users').where('username', username).first();
+        console.log("Awaited", ret)
+
+			  return ret
     }
 
     static async create(user) {
-        return knex('users').insert(user).returning('*');
+        console.log("Creating user", user)
+        return knex('users').insert(user);
     }
 
     static async update(id, user) {
@@ -71,21 +65,25 @@ class UsersDAO {
     }
 }
 
-class PromptsDAO {
+class CategoriesDAO {
     static async findAll() {
-        return knex('prompts').select('*');
+        return knex('categories').select('*');
     }
 
     static async findById(id) {
-        return knex('prompts').where('id', id).first();
+        return await knex('categories').where('id', id).first();
     }
 
-    static async create(prompt) {
-        return knex('prompts').insert(prompt).returning('*');
+    static async findByCategoryName(name) {
+        return await knex('categories').where('name', name).first();
+    }
+
+    static async create(category) {
+        return knex('categories').insert(category).returning('*');
     }
 
     static async delete(id) {
-        return knex('prompts').where('id', id).del();
+        return knex('categories').where('id', id).del();
     }
 }
 
@@ -129,28 +127,6 @@ class AttemptsDAO {
     }
 }
 
-class PromptDAO {
-    static async findAll() {
-        return knex('prompts').select('*');
-    }
-
-    static async findById(id) {
-        return knex('prompts').where('id', id).first();
-    }
-
-    static async findByPromptText(text) {
-        return knex('prompts').where('prompt_text', text).first();
-    }
-
-    static async create(prompt) {
-        return knex('prompts').insert(prompt).returning('*');
-    }
-
-    static async delete(id) {
-        return knex('prompts').where('id', id).del();
-    }
-
-}
 
 class TagsDAO {
     static async findAll() {
@@ -196,13 +172,6 @@ class UserRatingsDAO {
         return knex('user_ratings').select('*');
     }
 
-    static async findByUserIdAndPromptId(userId, promptId) {
-        return knex('user_ratings').where({
-            user_id: userId,
-            prompt_id: promptId
-        }).first();
-    }
-
     static async create(userRating) {
         return knex('user_ratings').insert(userRating).returning('*');
     }
@@ -224,7 +193,6 @@ class UserRatingsDAO {
 
 module.exports = {
     UsersDAO,
-    PromptsDAO,
     FeedItemsDAO,
     AttemptsDAO,
     TagsDAO,

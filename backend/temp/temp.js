@@ -1,4 +1,5 @@
 let seedrandom = require("seedrandom")
+let Importer = require("../dao/index.js").Importer
 
 let shuffle = (array)=>{
     let rng = seedrandom(JSON.stringify(array[0]))
@@ -140,7 +141,7 @@ let glossItems = [{
   clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
   answer_options: ["HELLO", "WHAT", "YOUR", "NAME?"],  
   arrangement: "line",
-  english: "Hello, what's your name?",
+  //english: "Hello, what's your name?",
   //options: ["PO","L", "HS", "M", "NMM", "SS", "SC"],
   correct_answer: "WHAT",
   type: "MultipleChoiceFeedItem",
@@ -151,7 +152,7 @@ let glossItems = [{
   clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
   answer_options: ["I", "MAKE", "COFFEE", "STARBUCKS"],
   arrangement: "line",
-  english: "I buy coffee at Starbucks",
+  //english: "I buy coffee at Starbucks",
   correct_answer:  "MAKE",
   type: "MultipleChoiceFeedItem",
   producer: christineK, 
@@ -162,7 +163,7 @@ let glossItems = [{
   clip: Clips.s3_host + '/clips/error-game/they-will-go-ferry-correct.mp4',
   answer_options: ["THEY", "WILL", "TAKE-CAR"],
   arrangement: "line",
-  english: "They will take the ferry",
+  //english: "They will take the ferry",
   correct_answer: "TAKE-CAR",
   type: "MultipleChoiceFeedItem",
   producer: christineK, 
@@ -172,10 +173,10 @@ let glossItems = [{
 
 let errorGameItems = [{
     clip: Clips.s3_host + '/clips/error-game/hello-your-name-what-incorrect.mp4',
-    correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
+    //correctClip: Clips.s3_host + '/clips/error-game/hello-your-name-what-correct.mp4',
     answer_options: ["HELLO", "YOU", "NAME", "WHAT?"],
     arrangement: "line",
-    english: "Hello, what's your name?",
+    //english: "Hello, what's your name?",
     correct_answer: "YOU",
     type: "MultipleChoiceFeedItem",
     producer: christineK,
@@ -183,8 +184,8 @@ let errorGameItems = [{
   },
   {
     clip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-incorrect.mp4',
-    correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
-    english: "I buy coffee at Starbucks",
+    //correctClip: Clips.s3_host + '/clips/error-game/i-buy-coffee-starbucks-correct.mp4',
+    //english: "I buy coffee at Starbucks",
     answer_options: ["I", "BUY", "COFFEE", "STARBUCKS"],
     arrangement: "line",
     correct_answer: "I",
@@ -195,8 +196,8 @@ let errorGameItems = [{
   },
   {
     clip: Clips.s3_host + '/clips/error-game/they-will-go-ferry-incorrect.mp4',
-    correctClip: Clips.s3_host + '/clips/error-game/they-will-go-ferry-correct.mp4',
-    english: "He will take the ferry",
+    //correctClip: Clips.s3_host + '/clips/error-game/they-will-go-ferry-correct.mp4',
+    //english: "He will take the ferry",
     answer_options: ["THEY", "GO", "FERRY"],
     arrangement: "line",
     correct_answer: "GO",
@@ -209,8 +210,7 @@ let errorGameItems = [{
 let allItems = [
 //  instructions("Welcome", welcomeInstructions, {icon: "👋"}),
 //  instructions("Letter Recognition", abcInstructions, {icon: "info"}),
-  ... shuffle(abcItems).slice(0, 3),
-  //...abcItems.slice(0, 3),
+  ... abcItems,
 //  instructions("Vocab", vocabInstructions, {icon: "📚"}),
   ... vocabItems,
 //  instructions("Fingerspelling", fingerspellingInstructions, {icon: "🤞"}),
@@ -219,14 +219,17 @@ let allItems = [
   ... glossItems,
 //  instructions("Find the Error", errorInstructions, {icon: "info"}),
   ... errorGameItems,
-]
-
-let Importer = require("../dao/index.js").Importer
-
-Importer.importFeedItem(allItems[0])
+];
 
 
-console.log("HERE")
+(async function(){
+  for(let i=0;i<allItems.length;i++){
+		let a = allItems[i]
+    a.category = "asl"
+		await Importer.importFeedItem(allItems[i])
+  }
+  console.log("THE END....")
+})()
 
 
 

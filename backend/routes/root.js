@@ -27,16 +27,20 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.get('/feed-next', async function (request, reply) {
-    
-//    let items = await knex("feed_items").select("*") 
-
     let num = request.query.number
+    let user_id = 1
+    let rating_range = "easy"
+    //For this user, select the feed items within their rating range,
+    //  that they haven't done recently
 
-    let ret = items.aslItems.slice(i, i + (num || 1))
-    i++
-    console.log("Num: "+ num, ret)
+    //Shit rating being separated by type is not what we want is it??
+
+/.where("rating > ? && rating < ?")
+
+    let items_in_range      = await knex("feed_items").select("*") 
+    let items_recently_done = await knex("feed_items") 
+  
+
     return ret
-	
-    //return items
   })
 }

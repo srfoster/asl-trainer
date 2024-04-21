@@ -13,8 +13,8 @@ DROP TABLE IF EXISTS feed_items;
 -- Drop the tags table
 DROP TABLE IF EXISTS tags;
 
--- Drop the prompts table
-DROP TABLE IF EXISTS prompts;
+-- Drop the categories table
+DROP TABLE IF EXISTS categories;
 
 -- Drop the users table last since it has foreign keys referenced by other tables
 DROP TABLE IF EXISTS users;

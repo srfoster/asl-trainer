@@ -7,24 +7,15 @@ CREATE TABLE users (
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE prompts (
+CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    prompt_text VARCHAR(255) NOT NULL UNIQUE
-);
-
-CREATE TABLE user_ratings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    prompt_id INT NOT NULL,
-    rating INT DEFAULT 1000, 
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (prompt_id) REFERENCES prompts(id)
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE feed_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     clip VARCHAR(255) NOT NULL,
-    prompt_id INT NOT NULL,
+    prompt VARCHAR(255) NOT NULL,
 		answer_options TEXT NOT NULL,  
 		correct_answer VARCHAR(255) NOT NULL,
     arrangement ENUM('grid', 'line') NOT NULL,
@@ -36,8 +27,7 @@ CREATE TABLE feed_items (
 
     rating INT DEFAULT 1000,
 
-    FOREIGN KEY (producer_id) REFERENCES users(id),
-    FOREIGN KEY (prompt_id)   REFERENCES prompts(id)
+    FOREIGN KEY (producer_id) REFERENCES users(id)
 );
 
 CREATE TABLE attempts (
