@@ -12,14 +12,23 @@ CREATE TABLE categories (
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE user_ratings(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    category_id INT NOT NULL,
+    rating INT NOT NULL DEFAULT 1000,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+)
+
 CREATE TABLE feed_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     clip VARCHAR(255) NOT NULL,
     prompt VARCHAR(255) NOT NULL,
-		answer_options TEXT NOT NULL,  
-		correct_answer VARCHAR(255) NOT NULL,
+    answer_options TEXT NOT NULL,  
+    correct_answer VARCHAR(255) NOT NULL,
     arrangement ENUM('grid', 'line') NOT NULL,
-		randomize_options BOOLEAN DEFAULT True,
+    randomize_options BOOLEAN DEFAULT True,
 
     producer_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
