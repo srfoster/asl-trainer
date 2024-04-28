@@ -41,7 +41,7 @@ module.exports = async function (fastify, opts) {
       await knex("attempts")
         .select("feed_item_id")
         .where({user_id})
-        .orderBy("timestamp", "desc")
+        .orderBy("attempt_time", "desc") //Doen't matter, right?
         .limit(10)  
 
     let items_in_range      = 
