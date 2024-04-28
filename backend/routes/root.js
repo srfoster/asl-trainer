@@ -12,9 +12,6 @@ const knex = require('knex')({
 });
 
 
-let items = require("./temp.js")  
-let i = 0
-
 let cors = require('@fastify/cors')
 
 module.exports = async function (fastify, opts) {
