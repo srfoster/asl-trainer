@@ -376,6 +376,7 @@ function Feed(){
 
   let scrollableRef = React.useRef(null)
   let [items, setItems] = React.useState([])
+  let [error, setError] = React.useState(undefined)
 
   useEffect(()=>{
     console.log("fetching initial...")
@@ -428,13 +429,18 @@ function Feed(){
     fetch(fetchFrom)
     .then(response => response.json())
     .then(nextItems => {
-      console.log("nextItem", nextItems)
-      setItems(items.concat(nextItems))
+      if(JSON.stringify(nextItems).match("error")){
+        setError(nextItems)
+      }
+      else{
+        setError(undefined)
+        setItems(items.concat(nextItems))
+      }
     })
   }
 
   return <div ref={scrollableRef} id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
-     {items.map(cardify)}
+     {error ? JSON.stringify(error) : items.map(cardify)}
   </div>
 }
 

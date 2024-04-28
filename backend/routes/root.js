@@ -37,7 +37,7 @@ module.exports = async function (fastify, opts) {
     //For this user, select the feed items within their rating range,
     //  that they haven't done recently
 
-    let user         = await knex("users").select("*").where({user_id})
+    let user         = await knex("users").select("*").where({id: user_id})
     let rating_range = rating_offsets.map(o => user.rating - o)
 
     let items_recently_done = 
