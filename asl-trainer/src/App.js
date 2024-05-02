@@ -51,6 +51,15 @@ import useCurrentColorScheme from '@mui/system/cssVars/useCurrentColorScheme';
 const darkTheme = createTheme({
   palette: {
     mode: 'light',
+    primary: {
+      main: '#F5F1ED'
+    },
+    success: {
+      main: '#9FE89E'
+    },
+    error: {
+      main: '#FF967C'
+    }
   },
 });
 
@@ -136,15 +145,14 @@ function SettingsFeedItem(props) {
   </FeedCard>
 }
 
-function FloatingHeader() {
-return(
-  <Stack sx={{ alignItems: "center", top: 0, bottom: 'auto', height: heights.navbar, backgroundColor: '#636F73' }}>
-        <Stack direction="row">
-          <Typography>Activity Type</Typography>
-          <InfoOutlinedIcon />
-        </Stack>
-      </Stack>  
-      )
+function FloatingHeader({prompt}) {
+  return (
+    <Stack sx={{ alignItems: "center", top: 0, bottom: 'auto', height: heights.navbar, backgroundColor: '#636F73' }}>
+      <Stack direction="row">
+        <Typography>{prompt}</Typography> 
+      </Stack>
+    </Stack>
+  )
 }
 
 function MultipleChoiceFeedItem(props) {
@@ -164,7 +172,8 @@ function MultipleChoiceFeedItem(props) {
 
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
-      <FloatingHeader/>
+      
+      <FloatingHeader prompt={props.card.prompt}/>
       <div
         style={{ position: "relative", height: "100%" }}
       >
@@ -255,7 +264,7 @@ let VideoAvatar = ({ producer, style }) => {
   return <div style={{ ...style }} >
     <Stack direction="row" alignItems={"center"} spacing={2}>
       <Avatar src={producer.avatar} />
-      <Typography variant="h6">
+      <Typography variant="h6" color="white">
         {producer.username}
       </Typography>
     </Stack>
@@ -297,6 +306,8 @@ function FeedCard(props) {
 function ClickableGloss(props) {
   let [wordSelection, setWordSelection] = React.useState(null)
 
+
+
   let color = (x) => {
     if (wordSelection === x) {
       if (x === props.correctAnswer)
@@ -305,6 +316,14 @@ function ClickableGloss(props) {
         return "error"
     }
     return "primary"
+  }
+
+  let fontSize = (x)=>{
+    let pxSize = 30;
+    if(x.length < 6)
+      return pxSize + "px";
+
+    return Math.max(0,(30 - (x.length - 6))) + "px"
   }
 
   if (props.arrangement == "line")
@@ -325,7 +344,7 @@ function ClickableGloss(props) {
       props.gloss.map((x, i) => {
         return <Grid item xs={6} >
           <Button
-            style={{ width: "100%", fontSize: '30px' }}
+            style={{ width: "42vw", height: "50px", fontSize: fontSize(x), overflow: "hidden" }}  
             variant="contained"
             color={color(x)}
             key={i} onClick={() => {
