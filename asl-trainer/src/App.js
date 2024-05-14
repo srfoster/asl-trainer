@@ -145,11 +145,11 @@ function SettingsFeedItem(props) {
   </FeedCard>
 }
 
-function FloatingHeader({prompt}) {
+function FloatingHeader({ prompt }) {
   return (
     <Stack sx={{ alignItems: "center", top: 0, bottom: 'auto', height: heights.navbar, backgroundColor: '#636F73' }}>
       <Stack direction="row">
-        <Typography>{prompt}</Typography> 
+        <Typography>{prompt}</Typography>
       </Stack>
     </Stack>
   )
@@ -172,8 +172,8 @@ function MultipleChoiceFeedItem(props) {
 
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
-      
-      <FloatingHeader prompt={props.card.prompt}/>
+
+      <FloatingHeader prompt={props.card.prompt} />
       <div
         style={{ position: "relative", height: "100%" }}
       >
@@ -318,12 +318,12 @@ function ClickableGloss(props) {
     return "primary"
   }
 
-  let fontSize = (x)=>{
+  let fontSize = (x) => {
     let pxSize = 30;
-    if(x.length < 6)
+    if (x.length < 6)
       return pxSize + "px";
 
-    return Math.max(0,(30 - (x.length - 6))) + "px"
+    return Math.max(0, (30 - (x.length - 6))) + "px"
   }
 
   if (props.arrangement == "line")
@@ -344,7 +344,7 @@ function ClickableGloss(props) {
       props.gloss.map((x, i) => {
         return <Grid item xs={6} >
           <Button
-            style={{ width: "42vw", height: "50px", fontSize: fontSize(x), overflow: "hidden" }}  
+            style={{ width: "42vw", height: "50px", fontSize: fontSize(x), overflow: "hidden" }}
             variant="contained"
             color={color(x)}
             key={i} onClick={() => {
@@ -359,6 +359,7 @@ function ClickableGloss(props) {
 export default function App() {
   let [lastAction, setLastAction] = React.useState(null)
   let [lastNav, setLastNav] = React.useState("feed")
+  let [loggedIn, setLoggedIn] = React.useState(false)
 
   let setActionAndDoStuff = (action) => {
     console.log("setting action", action)
@@ -382,16 +383,20 @@ export default function App() {
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-        <LastActionContext.Provider value={{ action: lastAction, setAction: setActionAndDoStuff }}>
-          <Router>
-            <NavBar />
-            <Container maxWidth="md" style={{ padding: 1 }}>
-              <Routes>
-                <Route path="/" element={currentComponent} />
-              </Routes>
-            </Container>
-          </Router>
-        </LastActionContext.Provider>
+        <Router>
+          {!loggedIn ? <Welcome></Welcome> :
+            <LastActionContext.Provider value={{ action: lastAction, setAction: setActionAndDoStuff }}>
+
+              <NavBar />
+              <Container maxWidth="md" style={{ padding: 1 }}>
+                <Routes>
+                  <Route path="/" element={currentComponent} />
+                </Routes>
+              </Container>
+
+            </LastActionContext.Provider>
+          }
+        </Router>
       </ThemeProvider>
     </>
   );
@@ -541,10 +546,20 @@ let Profile = (props) => {
           <Typography variant="h4" align="center">Account Info</Typography>
         </Box>
       </Stack>
+    </CardContent>
+  </Card>
+}
+
+let Welcome = (props) => {
+  let [createAccountSelected, setCreateAccountSelected] = React.useState(true)
+
+  return (
+    <div style={{ background: "white", padding: 15 }}>
       <Stack alignItems="center" padding={2} spacing={3}>
         <Typography align="center" variant="h2">Welcome to Lyrnify</Typography>
         <WavingHandIcon sx={{ fontSize: 100 }} />
         <Button
+          onClick = {()=>setCreateAccountSelected(true)}
           sx={{
             backgroundColor: "#ff967c",
             borderRadius: 2,
@@ -558,6 +573,7 @@ let Profile = (props) => {
           <Typography variant="h4" align="center">Create Account</Typography>
         </Button>
         <Button
+          onClick = {()=>setCreateAccountSelected(false)}
           sx={{
             backgroundColor: "#ff967c",
             borderRadius: 2,
@@ -572,35 +588,35 @@ let Profile = (props) => {
         </Button>
       </Stack>
 
-
-      <Stack>
-        <Typography variant="h4">Log in</Typography>
-        <TextField id="standard-basic" label="email" variant="standard" />
-        <TextField id="standard-basic" label="password" variant="standard" />
-      </Stack>
-      <Stack align="right">
-        <Link href="#">forgot password?</Link>
-      </Stack>
-      <Stack direction="row" spacing={1}>
-        <Typography>New here?</Typography>
-        <Link href="#">Create account</Link>
-      </Stack>
-
-      <Stack>
-        <Typography variant="h4">Create Account</Typography>
-        <TextField id="standard-basic" label="username" variant="standard" />
-        <TextField id="standard-basic" label="email" variant="standard" />
-        <TextField id="standard-basic" label="password" variant="standard" />
-        <TextField id="standard-basic" label="confirm password" variant="standard" />
-      </Stack>
-      <Stack direction="row" spacing={1}>
-        <Typography>Already have an account?</Typography>
-        <Link href="#">Log in</Link>
-      </Stack>
-    </CardContent>
-  </Card>
+      {!createAccountSelected ?
+        <>
+          <Stack>
+            <Typography variant="h4">Log in</Typography>
+            <TextField id="standard-basic" label="email" variant="standard" />
+            <TextField id="standard-basic" label="password" variant="standard" />
+          </Stack>
+          <Stack align="right">
+            <Link href="#">forgot password?</Link>
+          </Stack>
+        </>
+        :
+        <>
+          <Stack direction="row" spacing={1}>
+            <Typography>New here?</Typography>
+            <Link href="#">Create account</Link>
+          </Stack>
+          <Stack>
+            <Typography variant="h4">Create Account</Typography>
+            <TextField id="standard-basic" label="username" variant="standard" />
+            <TextField id="standard-basic" label="email" variant="standard" />
+            <TextField id="standard-basic" label="password" variant="standard" />
+            <TextField id="standard-basic" label="confirm password" variant="standard" />
+          </Stack>
+        </>
+      }
+    </div>
+  )
 }
-
 
 
 let Settings = (props) => {
