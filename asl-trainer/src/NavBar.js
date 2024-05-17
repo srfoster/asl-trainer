@@ -16,11 +16,11 @@ import {heights} from "./config"
 export default function NavBar() {
   let showText = false
   return (
-    <AppBar position="fixed" color="secondary" sx={{ top: 'auto', bottom: 0, height: heights.navbar }}>
+    <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, height: heights.navbar, backgroundColor: '#636F73'}}>
       <LastActionContext.Consumer>
         {({action,setAction}) => (
           <Stack direction="row" alignItems={"center"} justifyContent="center" spacing={5} >
-            <IconButton onClick={()=>setAction({action: "nav", arguments: "feed"})}>
+            <IconButton sx={{color: '#FFFFFF'}} onClick={()=>setAction({action: "nav", arguments: "feed"})}>
               <Stack alignItems={"center"}>
                 <Stack alignItems={"center"} justifyContent="center"  style={{ width: 50, height: 50 }}>
                   <LearnIcon style={{ width: '30px', height: '30px' }} />
@@ -39,7 +39,7 @@ export default function NavBar() {
                 {showText && <Typography>timed practice</Typography>}
               </Stack>
             </IconButton> */}
-            <IconButton onClick={()=>setAction({action: "nav", arguments: "settings"})}>
+            <IconButton sx={{color: '#FFFFFF'}} onClick={()=>setAction({action: "nav", arguments: "settings"})}>
               <Stack alignItems={"center"}>
                 <Stack alignItems={"center"} justifyContent="center"  style={{ width: 50, height: 50 }}>
                   <SettingsIcon style={{ width: '40px', height: '40px' }} />
