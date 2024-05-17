@@ -384,7 +384,7 @@ export default function App() {
     <>
       <ThemeProvider theme={darkTheme}>
         <Router>
-          {!loggedIn ? <Welcome></Welcome> :
+          {loggedIn ? <Welcome></Welcome> :
             <LastActionContext.Provider value={{ action: lastAction, setAction: setActionAndDoStuff }}>
 
               <NavBar />
@@ -550,16 +550,67 @@ let Profile = (props) => {
   </Card>
 }
 
+
+let LogIn = (props) => {
+  return (
+    <>
+      <Stack>
+        <TextField id="standard-basic" label="email" variant="standard" />
+        <TextField id="standard-basic" label="password" variant="standard" />
+      </Stack>
+      <Stack align="right">
+        <Link href="#">forgot password?</Link>
+      </Stack>
+      <Button
+      sx={{backgroundColor: "#ff967c",
+      borderRadius: 2,
+      p: 1,
+      minWidth: 100,
+      borderRadius: '25px',
+      boxShadow: 3,
+      textTransform: "none",
+      color: "black"}}>
+      <Typography variant = "h5">Log In</Typography>
+      </Button>
+    </>)
+
+}
+
+let CreateAccount = (props) => {
+  return (
+    <>
+      <Stack paddingBottom={3}>
+        <TextField id="standard-basic" label="username" variant="standard" />
+        <TextField id="standard-basic" label="email" variant="standard" />
+        <TextField id="standard-basic" label="password" variant="standard" />
+        <TextField id="standard-basic" label="confirm password" variant="standard" />
+      </Stack>
+      <Button
+      sx={{backgroundColor: "#ff967c",
+      borderRadius: 2,
+      p: 1,
+      minWidth: 100,
+      borderRadius: '25px',
+      boxShadow: 3,
+      textTransform: "none",
+      color: "black"}}>
+      <Typography variant = "h5">Sign Up</Typography>
+      </Button>
+    </>
+  )
+}
+
+
 let Welcome = (props) => {
-  let [createAccountSelected, setCreateAccountSelected] = React.useState(true)
+  let [createAccountSelected, setCreateAccountSelected] = React.useState(null)
 
   return (
-    <div style={{ background: "white", padding: 15 }}>
-      <Stack alignItems="center" padding={2} spacing={3}>
+    <div style={{ height: "100vh", background: "white", padding: 15 }}>
+      <Stack alignItems="center" padding={2} spacing={3} paddingBottom={5}>
         <Typography align="center" variant="h2">Welcome to Lyrnify</Typography>
         <WavingHandIcon sx={{ fontSize: 100 }} />
         <Button
-          onClick = {()=>setCreateAccountSelected(true)}
+          onClick={() => setCreateAccountSelected(true)}
           sx={{
             backgroundColor: "#ff967c",
             borderRadius: 2,
@@ -573,7 +624,7 @@ let Welcome = (props) => {
           <Typography variant="h4" align="center">Create Account</Typography>
         </Button>
         <Button
-          onClick = {()=>setCreateAccountSelected(false)}
+          onClick={() => setCreateAccountSelected(false)}
           sx={{
             backgroundColor: "#ff967c",
             borderRadius: 2,
@@ -588,31 +639,10 @@ let Welcome = (props) => {
         </Button>
       </Stack>
 
-      {!createAccountSelected ?
-        <>
-          <Stack>
-            <Typography variant="h4">Log in</Typography>
-            <TextField id="standard-basic" label="email" variant="standard" />
-            <TextField id="standard-basic" label="password" variant="standard" />
-          </Stack>
-          <Stack align="right">
-            <Link href="#">forgot password?</Link>
-          </Stack>
-        </>
+      {createAccountSelected === null ? "" : createAccountSelected === false ?
+        <LogIn />
         :
-        <>
-          <Stack direction="row" spacing={1}>
-            <Typography>New here?</Typography>
-            <Link href="#">Create account</Link>
-          </Stack>
-          <Stack>
-            <Typography variant="h4">Create Account</Typography>
-            <TextField id="standard-basic" label="username" variant="standard" />
-            <TextField id="standard-basic" label="email" variant="standard" />
-            <TextField id="standard-basic" label="password" variant="standard" />
-            <TextField id="standard-basic" label="confirm password" variant="standard" />
-          </Stack>
-        </>
+        <CreateAccount />
       }
     </div>
   )
