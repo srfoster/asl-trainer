@@ -24,6 +24,7 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.get('/feed-next', async function (request, reply) {
+/*
     let num = request.query.number
     let user_id = 1
     let rating_ease = "easy"
@@ -50,7 +51,27 @@ module.exports = async function (fastify, opts) {
         .whereBetween("rating", rating_range)
         .where("feed_item_id", "not in", items_recently_done.map(o => o.feed_item_id))
         .limit(num)
+*/
 
-    return items_in_range
+    let items_in_range      = 
+      await knex("feed_items")
+        .select("*")
+        .limit(3)
+
+    console.log(items_in_range)
+
+    return items_in_range.map((item)=>{
+       item.type = "MultipleChoiceFeedItem"
+
+       item.producer = {
+					username: "lalahep",
+					profile_pic_url:  "/profile-pics/laura.png",
+					prompt: "Alphabet Practice",
+       }
+
+       item.answerOptions = item.answer_options.split("$$$$$")
+
+       return item
+    })
   })
 }
