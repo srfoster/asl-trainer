@@ -487,6 +487,7 @@ function Feed() {
         setError(nextItems)
       }
       else{
+        console.log(nextItems)
         setError(undefined)
         setItems(items.concat(nextItems))
       }
