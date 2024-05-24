@@ -74,4 +74,64 @@ module.exports = async function (fastify, opts) {
        return item
     })
   })
+
+
+fastify.post("/users/signup", async function (request, reply) {
+    const { username, password, email } = request.body;
+		console.log(request)
+    console.log(username, password, email)
+    if (!isValidEmail(email)) {
+      reply.status(400).send({
+        error: "Invalid Email",
+      });
+      return;
+    }
+    if (!isValidPassword(password)) {
+      reply.status(400).send({
+        error: "Invalid Password",
+      });
+      return;
+    }
+    const password_hash = await fastify.bcrypt.hash(password);
+    const token = fastify.jwt.sign({ username });
+    let createdUserID;
+    try {
+      [createdUserID] = await knex("users").insert({
+        username: username,
+        password_hash: password_hash,
+        email: email,
+      });
+    } catch (error) {
+      let errorMessage = "Problem creating user";
+      if (error.sqlMessage.includes("username")) {
+        errorMessage = "Username already in use";
+      } else if (error.sqlMessage.includes("email")) {
+        errorMessage = "Email already in use";
+      }
+      reply.status(400).send({
+        error: errorMessage,
+      });
+      return;
+    }
+    let createdUser = await knex("users").where("id", createdUserID).first(); // Resolves to any
+    reply.status(201).send({
+      user: {
+        username: createdUser.username,
+        email: createdUser.email,
+        id: createdUserID,
+        token,
+      },
+    });
+  });
+
+	const isValidEmail = (email) => { 
+		const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			return regex.test(email);
+	}
+
+	const isValidPassword = (password) => {
+		const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*]{10,}$/;
+		return regex.test(password);
+	}
+
 }

@@ -8,7 +8,13 @@ const options = {}
 
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
+	fastify.register(require("fastify-bcrypt"), {
+    saltWorkFactor: 12,
+  });
 
+  fastify.register(require("@fastify/jwt"), {
+    secret: "Kremlepp the farshwashh",
+  });
   // Do not touch the following lines
 
   // This loads all plugins defined in plugins
