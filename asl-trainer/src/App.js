@@ -46,6 +46,8 @@ import { shuffle } from './utils';
 import { heights } from "./config"
 import useCurrentColorScheme from '@mui/system/cssVars/useCurrentColorScheme';
 
+const BACKEND_URL = "http://54.156.128.216:8080"
+
 const darkTheme = createTheme({
   palette: {
     mode: 'light',
@@ -382,7 +384,7 @@ export default function App() {
     <>
       <ThemeProvider theme={darkTheme}>
         <Router>
-          {loggedIn ? <Welcome></Welcome> :
+          {!loggedIn ? <Welcome></Welcome> :
             <LastActionContext.Provider value={{ action: lastAction, setAction: setActionAndDoStuff }}>
 
               <NavBar />
@@ -433,7 +435,7 @@ function Feed() {
   let [items, setItems] = React.useState([])
   let [error, setError] = React.useState(undefined)
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("fetching initial...")
     fetchData(3)
   }, [])
@@ -477,25 +479,25 @@ function Feed() {
     </div>
   }
 
-  let fetchData = (num)=>{
-    let fetchFrom = "http://54.156.128.216:8080/feed-next?number=" + num 
+  let fetchData = (num) => {
+    let fetchFrom = BACKEND_URL + "/feed-next?number=" + num
 
     fetch(fetchFrom)
-    .then(response => response.json())
-    .then(nextItems => {
-      if(JSON.stringify(nextItems).match("error")){
-        setError(nextItems)
-      }
-      else{
-        console.log(nextItems)
-        setError(undefined)
-        setItems(items.concat(nextItems))
-      }
-    })
+      .then(response => response.json())
+      .then(nextItems => {
+        if (JSON.stringify(nextItems).match("error")) {
+          setError(nextItems)
+        }
+        else {
+          console.log(nextItems)
+          setError(undefined)
+          setItems(items.concat(nextItems))
+        }
+      })
   }
 
-  return <div ref={scrollableRef} id="container" style={{scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll"}}>
-     {error ? JSON.stringify(error) : items.map(cardify)}
+  return <div ref={scrollableRef} id="container" style={{ scrollSnapType: "y mandatory", height: "100vh", overflow: "scroll" }}>
+    {error ? JSON.stringify(error) : items.map(cardify)}
   </div>
 }
 
@@ -577,39 +579,64 @@ let LogIn = (props) => {
         <Link href="#">forgot password?</Link>
       </Stack>
       <Button
-      sx={{backgroundColor: "#ff967c",
-      borderRadius: 2,
-      p: 1,
-      minWidth: 100,
-      borderRadius: '25px',
-      boxShadow: 3,
-      textTransform: "none",
-      color: "black"}}>
-      <Typography variant = "h5">Log In</Typography>
+        sx={{
+          backgroundColor: "#ff967c",
+          borderRadius: 2,
+          p: 1,
+          minWidth: 100,
+          borderRadius: '25px',
+          boxShadow: 3,
+          textTransform: "none",
+          color: "black"
+        }}>
+        <Typography variant="h5">Log In</Typography>
       </Button>
     </>)
 
 }
 
 let CreateAccount = (props) => {
+  const [username, setUsername] = React.useState(null)
+  const [email, setEmail] = React.useState(null)
+  const [password, setPassword] = React.useState(null)
+  const [confirmPassword, setConfirmPassword] = React.useState(null)
   return (
     <>
       <Stack paddingBottom={3}>
-        <TextField id="standard-basic" label="username" variant="standard" />
-        <TextField id="standard-basic" label="email" variant="standard" />
-        <TextField id="standard-basic" label="password" variant="standard" />
-        <TextField id="standard-basic" label="confirm password" variant="standard" />
+        <TextField id="standard-basic" label="username" variant="standard" onChange={(event) => { setUsername(event.target.value) }} />
+        <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setEmail(event.target.value) }} />
+        <TextField id="standard-basic" label="password" variant="standard" onChange={(event) => { setPassword(event.target.value) }} />
+        <TextField id="standard-basic" label="confirm password" variant="standard" onChange={(event) => { setConfirmPassword(event.target.value) }} />
       </Stack>
       <Button
-      sx={{backgroundColor: "#ff967c",
-      borderRadius: 2,
-      p: 1,
-      minWidth: 100,
-      borderRadius: '25px',
-      boxShadow: 3,
-      textTransform: "none",
-      color: "black"}}>
-      <Typography variant = "h5">Sign Up</Typography>
+        sx={{
+          backgroundColor: "#ff967c",
+          borderRadius: 2,
+          p: 1,
+          minWidth: 100,
+          borderRadius: '25px',
+          boxShadow: 3,
+          textTransform: "none",
+          color: "black"
+        }}
+        onClick={() => {
+          console.log(username, email, password)
+          let fetchFrom = BACKEND_URL + "/users/signup"
+          fetch(fetchFrom,
+            {
+              method: "POST",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, email, password })
+            })
+            .then(response => response.json())
+            .then(response => {
+              console.log(response)
+            })
+        }}
+      >
+        <Typography variant="h5">Sign Up</Typography>
       </Button>
     </>
   )
