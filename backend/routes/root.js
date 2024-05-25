@@ -75,7 +75,22 @@ module.exports = async function (fastify, opts) {
     })
   })
 
-
+	fastify.put("/users/login", async function (request, reply) {
+    const { username, password } = request.body;
+    let user = await knex("users").where("username", username).first();
+    if (!user) {
+      reply.status(401).send({ error: "Unauthorized" });
+      return;
+    }
+    let match = await fastify.bcrypt.compare(password, user.password_hash);
+    delete user.password_hash;
+    if (match) {
+      user.token = fastify.jwt.sign({ username });
+      reply.status(200).send({ user: user, message: "Success" });
+    } else {
+      reply.status(401).send({ error: "Unauthorized" });
+    }
+  });
 fastify.post("/users/signup", async function (request, reply) {
     const { username, password, email } = request.body;
 		console.log(request)
