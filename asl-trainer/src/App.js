@@ -359,7 +359,10 @@ function ClickableGloss(props) {
 export default function App() {
   let [lastAction, setLastAction] = React.useState(null)
   let [lastNav, setLastNav] = React.useState("feed")
-  let [loggedIn, setLoggedIn] = React.useState(false)
+  //let [loggedIn, setLoggedIn] = React.useState(false)
+  const [jwtToken, setJwtToken] = React.useState(
+    window.localStorage.getItem('jwtToken')
+  );
 
   let setActionAndDoStuff = (action) => {
     console.log("setting action", action)
@@ -384,7 +387,7 @@ export default function App() {
     <>
       <ThemeProvider theme={darkTheme}>
         <Router>
-          {!loggedIn ? <Welcome></Welcome> :
+          {!jwtToken ? <Welcome setJwtToken={setJwtToken}></Welcome> :
             <LastActionContext.Provider value={{ action: lastAction, setAction: setActionAndDoStuff }}>
 
               <NavBar />
@@ -562,6 +565,22 @@ let Profile = (props) => {
           }}>
           <Typography variant="h4" align="center">Account Info</Typography>
         </Box>
+        <Button
+        sx={{
+          backgroundColor: "#ff967c",
+          borderRadius: 2,
+          p: 1,
+          minWidth: 100,
+          borderRadius: '25px',
+          boxShadow: 3,
+          textTransform: "none",
+          color: "black"
+        }}
+        onClick={() => {
+          window.localStorage.removeItem('jwtToken')
+          window.location.reload()
+        }}
+        >Log Out</Button>
       </Stack>
     </CardContent>
   </Card>
@@ -569,11 +588,13 @@ let Profile = (props) => {
 
 
 let LogIn = (props) => {
+  const [username, setUsername] = React.useState(null)
+  const [password, setPassword] = React.useState(null)
   return (
     <>
       <Stack>
-        <TextField id="standard-basic" label="email" variant="standard" />
-        <TextField id="standard-basic" label="password" variant="standard" />
+        <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setUsername(event.target.value) }}/>
+        <TextField id="standard-basic" label="password" variant="standard" onChange={(event) => { setPassword(event.target.value) }}/>
       </Stack>
       <Stack align="right">
         <Link href="#">forgot password?</Link>
@@ -588,7 +609,26 @@ let LogIn = (props) => {
           boxShadow: 3,
           textTransform: "none",
           color: "black"
-        }}>
+        }}
+        onClick={() => {
+          console.log(username, password)
+          let fetchFrom = BACKEND_URL + "/users/login"
+          fetch(fetchFrom,
+            {
+              method: "PUT",
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(response => {
+              console.log(response)
+              props.setJwtToken(response.user.token)
+              window.localStorage.setItem('jwtToken', response.user.token)
+            })
+        }}
+      >
         <Typography variant="h5">Log In</Typography>
       </Button>
     </>)
@@ -633,6 +673,8 @@ let CreateAccount = (props) => {
             .then(response => response.json())
             .then(response => {
               console.log(response)
+              props.setJwtToken(response.user.token)
+              window.localStorage.setItem('jwtToken', response.user.token)
             })
         }}
       >
@@ -682,9 +724,9 @@ let Welcome = (props) => {
       </Stack>
 
       {createAccountSelected === null ? "" : createAccountSelected === false ?
-        <LogIn />
+        <LogIn setJwtToken={props.setJwtToken}/>
         :
-        <CreateAccount />
+        <CreateAccount setJwtToken={props.setJwtToken}/>
       }
     </div>
   )
