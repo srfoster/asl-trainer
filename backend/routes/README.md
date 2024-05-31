@@ -25,3 +25,10 @@ functionality into the `plugins` folder, and share it via
 
 If you're a bit confused about using `async/await` to write routes, you would
 better take a look at [Promise resolution](https://fastify.dev/docs/latest/Reference/Routes/#promise-resolution) for more details.
+
+sshToASLBackend
+cd asl-trainer/backend/routes
+./start
+
+ctrl c to stop backend
+ctrl d to close connection to server

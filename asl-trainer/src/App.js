@@ -38,7 +38,7 @@ import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import WavingHandIcon from '@mui/icons-material/WavingHand';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-
+import Alert from '@mui/material/Alert';
 import { aslItems } from "./feedItems"
 import { LastActionContext } from "./Contexts"
 
@@ -594,7 +594,7 @@ let LogIn = (props) => {
     <>
       <Stack>
         <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setUsername(event.target.value) }}/>
-        <TextField id="standard-basic" label="password" variant="standard" onChange={(event) => { setPassword(event.target.value) }}/>
+        <TextField id="standard-basic" label="password" variant="standard" type="password" onChange={(event) => { setPassword(event.target.value) }}/>
       </Stack>
       <Stack align="right">
         <Link href="#">forgot password?</Link>
@@ -645,10 +645,11 @@ let CreateAccount = (props) => {
       <Stack paddingBottom={3}>
         <TextField id="standard-basic" label="username" variant="standard" onChange={(event) => { setUsername(event.target.value) }} />
         <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setEmail(event.target.value) }} />
-        <TextField id="standard-basic" label="password" variant="standard" onChange={(event) => { setPassword(event.target.value) }} />
-        <TextField id="standard-basic" label="confirm password" variant="standard" onChange={(event) => { setConfirmPassword(event.target.value) }} />
+        <TextField id="standard-basic" label="password" variant="standard" type="password" onChange={(event) => { setPassword(event.target.value) }} />
+        <TextField id="standard-basic" label="confirm password" variant="standard" type="password" onChange={(event) => { setConfirmPassword(event.target.value) }} />
+       {!(password==confirmPassword)&&<Alert severity="error">Passwords do not match.</Alert>}
       </Stack>
-      <Button
+      <Button disabled={!(username&&email&&password&&confirmPassword&&(password==confirmPassword))}
         sx={{
           backgroundColor: "#ff967c",
           borderRadius: 2,
