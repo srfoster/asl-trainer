@@ -145,15 +145,7 @@ function SettingsFeedItem(props) {
   </FeedCard>
 }
 
-function FloatingHeader({ prompt }) {
-  return (
-    <Stack sx={{ alignItems: "center", top: 0, bottom: 'auto', height: heights.navbar, backgroundColor: '#636F73' }}>
-      <Stack direction="row">
-        <Typography>{prompt}</Typography>
-      </Stack>
-    </Stack>
-  )
-}
+
 
 function MultipleChoiceFeedItem(props) {
   let [wordSelection, setWordSelection] = React.useState(null)
@@ -173,7 +165,6 @@ function MultipleChoiceFeedItem(props) {
   return (
     <FeedCard {...props} gotItRight={gotItRight} >
 
-      <FloatingHeader prompt={props.card.prompt} />
       <div
         style={{ position: "relative", height: "100%" }}
       >
@@ -196,6 +187,7 @@ function MultipleChoiceFeedItem(props) {
         width: "101%", bottom: 0, left: 0, height: "20vh", display: "flex"
       }}>
         <Stack justifyContent={"center"} alignItems={"center"} style={{ margin: 20, flexGrow: 1 }}>
+          <Typography sx={{color: "white"}}>{props.card.prompt}</Typography>
           <ClickableGloss
             arrangement={props.card.arrangement}
             correctAnswer={props.card.correctAnswer}
@@ -566,20 +558,20 @@ let Profile = (props) => {
           <Typography variant="h4" align="center">Account Info</Typography>
         </Box>
         <Button
-        sx={{
-          backgroundColor: "#ff967c",
-          borderRadius: 2,
-          p: 1,
-          minWidth: 100,
-          borderRadius: '25px',
-          boxShadow: 3,
-          textTransform: "none",
-          color: "black"
-        }}
-        onClick={() => {
-          window.localStorage.removeItem('jwtToken')
-          window.location.reload()
-        }}
+          sx={{
+            backgroundColor: "#ff967c",
+            borderRadius: 2,
+            p: 1,
+            minWidth: 100,
+            borderRadius: '25px',
+            boxShadow: 3,
+            textTransform: "none",
+            color: "black"
+          }}
+          onClick={() => {
+            window.localStorage.removeItem('jwtToken')
+            window.location.reload()
+          }}
         >Log Out</Button>
       </Stack>
     </CardContent>
@@ -593,8 +585,8 @@ let LogIn = (props) => {
   return (
     <>
       <Stack>
-        <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setUsername(event.target.value) }}/>
-        <TextField id="standard-basic" label="password" variant="standard" type="password" onChange={(event) => { setPassword(event.target.value) }}/>
+        <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setUsername(event.target.value) }} />
+        <TextField id="standard-basic" label="password" variant="standard" type="password" onChange={(event) => { setPassword(event.target.value) }} />
       </Stack>
       <Stack align="right">
         <Link href="#">forgot password?</Link>
@@ -647,9 +639,9 @@ let CreateAccount = (props) => {
         <TextField id="standard-basic" label="email" variant="standard" onChange={(event) => { setEmail(event.target.value) }} />
         <TextField id="standard-basic" label="password" variant="standard" type="password" onChange={(event) => { setPassword(event.target.value) }} />
         <TextField id="standard-basic" label="confirm password" variant="standard" type="password" onChange={(event) => { setConfirmPassword(event.target.value) }} />
-       {!(password==confirmPassword)&&<Alert severity="error">Passwords do not match.</Alert>}
+        {!(password == confirmPassword) && <Alert severity="error">Passwords do not match.</Alert>}
       </Stack>
-      <Button disabled={!(username&&email&&password&&confirmPassword&&(password==confirmPassword))}
+      <Button disabled={!(username && email && password && confirmPassword && (password == confirmPassword))}
         sx={{
           backgroundColor: "#ff967c",
           borderRadius: 2,
@@ -725,9 +717,9 @@ let Welcome = (props) => {
       </Stack>
 
       {createAccountSelected === null ? "" : createAccountSelected === false ?
-        <LogIn setJwtToken={props.setJwtToken}/>
+        <LogIn setJwtToken={props.setJwtToken} />
         :
-        <CreateAccount setJwtToken={props.setJwtToken}/>
+        <CreateAccount setJwtToken={props.setJwtToken} />
       }
     </div>
   )
