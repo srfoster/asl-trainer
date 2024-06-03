@@ -187,7 +187,7 @@ function MultipleChoiceFeedItem(props) {
         width: "101%", bottom: 0, left: 0, height: "20vh", display: "flex"
       }}>
         <Stack justifyContent={"center"} alignItems={"center"} style={{ margin: 20, flexGrow: 1 }}>
-          <Typography sx={{color: "white"}}>{props.card.prompt}</Typography>
+          <Typography sx={{ color: "white" }}>{props.card.prompt}</Typography>
           <ClickableGloss
             arrangement={props.card.arrangement}
             correctAnswer={props.card.correctAnswer}
@@ -520,13 +520,90 @@ let MyConfetti = () => {
 let Profile = (props) => {
   return <Card sx={{ overflow: "scroll", height: "93vh", backgroundColor: "#F5F1ED" }}>
     <CardContent>
-      <Stack alignItems="center" padding={5} spacing={5}>
+      <Stack alignItems="center" padding={5} spacing={2}>
         <Avatar alt="Cindy Baker" src="https://mui.com/static/images/avatar/1.jpg"
           sx={{ width: 150, height: 150 }} />
-        <Typography variant="h6">Username</Typography>
+        <Typography variant="h6">John Doe</Typography>
       </Stack>
-      <Stack alignItems="center" spacing={2}>
-        <Box
+      <Stack>
+        <Stack alignItems="left" padding={2}>
+          <Typography variant="h6">Learning History</Typography>
+          <Typography variant="body1">You've answered 36 questions</Typography>
+          <Typography variant="body1">75% overall accuracy</Typography>
+          <Typography variant="body1">You've practiced 21 words</Typography>
+          <Typography variant="body1">Your longest streak was 5 days</Typography>
+        </Stack>
+        <Stack alignItems="left" padding={2}>
+          <Typography variant="h6">Account Information</Typography>
+          <Typography variant="body1">Member since June 2024</Typography>
+          <Stack spacing={1}>
+            <Button
+              sx={{
+                /* 
+                borderRadius: '25px',
+                p: 1,
+                textTransform: "none", */
+                backgroundColor: "#FFFFFF",
+                boxShadow: 2,
+                borderRadius: 2,
+                color: "black",
+                maxWidth: 180,
+              }} >
+              Edit Personal Data </Button>
+
+            <Button
+              sx={{
+                /* backgroundColor: "#ff967c",
+                borderRadius: 2,
+                p: 1,
+                maxWidth: 80,
+                borderRadius: '25px',
+                boxShadow: 3,
+                textTransform: "none",
+                color: "black" */
+                backgroundColor: "#FFFFFF",
+                boxShadow: 2,
+                borderRadius: 2,
+                color: "black",
+                maxWidth: 90,
+              }}
+              onClick={() => {
+                window.localStorage.removeItem('jwtToken')
+                window.location.reload()
+              }}
+            >Log Out</Button>
+          </Stack>
+        </Stack>
+        <Stack alignItems="left" padding={2}>
+          <Typography variant="h6">Help</Typography>
+          <Stack spacing={1}>
+            <Button
+              sx={{
+                backgroundColor: "#FFFFFF",
+                boxShadow: 2,
+                borderRadius: 2,
+                color: "black",
+                maxWidth: 70,
+              }} >
+              FAQs </Button>
+            <Button
+              sx={{
+                backgroundColor: "#FFFFFF",
+                boxShadow: 2,
+                borderRadius: 2,
+                color: "black",
+                maxWidth: 120,
+              }} >
+              Resources</Button>
+          </Stack>
+        </Stack>
+        <Stack alignItems="left" padding={2}>
+          <Typography variant="h6">Privacy and Legal</Typography>
+          <Link>Terms and Conditions</Link>
+          <Link>Privacy Policy</Link>
+          <Link>Delete Account</Link>
+        </Stack>
+        {/* <Box
           sx={{
             backgroundColor: "#ff967c",
             borderRadius: 2,
@@ -556,23 +633,8 @@ let Profile = (props) => {
             borderRadius: '25px'
           }}>
           <Typography variant="h4" align="center">Account Info</Typography>
-        </Box>
-        <Button
-          sx={{
-            backgroundColor: "#ff967c",
-            borderRadius: 2,
-            p: 1,
-            minWidth: 100,
-            borderRadius: '25px',
-            boxShadow: 3,
-            textTransform: "none",
-            color: "black"
-          }}
-          onClick={() => {
-            window.localStorage.removeItem('jwtToken')
-            window.location.reload()
-          }}
-        >Log Out</Button>
+        </Box> */}
+
       </Stack>
     </CardContent>
   </Card>
