@@ -189,6 +189,7 @@ function MultipleChoiceFeedItem(props) {
         <Stack justifyContent={"center"} alignItems={"center"} style={{ margin: 20, flexGrow: 1 }}>
           <Typography sx={{ color: "white" }}>{props.card.prompt}</Typography>
           <ClickableGloss
+            id={props.card.id}
             arrangement={props.card.arrangement}
             correctAnswer={props.card.correctAnswer}
             onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
@@ -297,9 +298,6 @@ function FeedCard(props) {
 
 function ClickableGloss(props) {
   let [wordSelection, setWordSelection] = React.useState(null)
-
-
-
   let color = (x) => {
     if (wordSelection === x) {
       if (x === props.correctAnswer)
@@ -318,6 +316,22 @@ function ClickableGloss(props) {
     return Math.max(0, (30 - (x.length - 6))) + "px"
   }
 
+  let recordAnswer = () => {
+    let fetchFrom = BACKEND_URL + "/feed-items/"+ props.id
+
+    fetch(fetchFrom, {
+      method: "PUT",
+      headers: {
+       // 'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('jwtToken'),
+      },
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response)
+      })
+  }
+
   if (props.arrangement == "line")
     return <Stack direction="row" spacing={2}>{
       props.gloss.map((x, i) => {
@@ -328,6 +342,7 @@ function ClickableGloss(props) {
           key={i} onClick={() => {
             setWordSelection(x)
             props.onClick(x)
+            recordAnswer()
           }}>{x}</Button>
       })}</Stack>
 
@@ -342,6 +357,7 @@ function ClickableGloss(props) {
             key={i} onClick={() => {
               setWordSelection(x)
               props.onClick(x)
+              recordAnswer()
             }}>{x}</Button>
         </Grid>
       })}</Grid>
@@ -477,7 +493,12 @@ function Feed() {
   let fetchData = (num) => {
     let fetchFrom = BACKEND_URL + "/feed-next?number=" + num
 
-    fetch(fetchFrom)
+    fetch(fetchFrom, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('jwtToken'),
+      },
+    })
       .then(response => response.json())
       .then(nextItems => {
         if (JSON.stringify(nextItems).match("error")) {
