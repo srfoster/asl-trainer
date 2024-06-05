@@ -1,23 +1,12 @@
 'use strict'
 
-const knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: '127.0.0.1',
-    port: 3306,
-    user: 'root',
-    password: process.env.DB_PASSWORD,
-    database: 'lyrnify',
-  },
-});
 
 
-let cors = require('@fastify/cors')
+const environment = process.env.NODE_ENV || "development";
+const knexConfig = require("../knexfile")[environment];
+const knex = require("knex")(knexConfig);
 
 module.exports = async function (fastify, opts) {
-  await fastify.register(cors, { 
-		// put your options here
-	})
 
   fastify.get('/', async function (request, reply) {
     return { root: true }
@@ -75,6 +64,13 @@ module.exports = async function (fastify, opts) {
     })
   })
 
+
+	fastify.put("/feed-items/:id", async function (request, reply) {
+		let id=request.params.id
+		console.log(id, request.user)
+    reply.send({})
+	})
+
 	fastify.put("/users/login", async function (request, reply) {
     const { username, password } = request.body;
     let user = await knex("users").where("username", username).first();
@@ -91,6 +87,7 @@ module.exports = async function (fastify, opts) {
       reply.status(401).send({ error: "Unauthorized" });
     }
   });
+
 fastify.post("/users/signup", async function (request, reply) {
     const { username, password, email } = request.body;
 		console.log(request)
