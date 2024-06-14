@@ -152,7 +152,7 @@ function MultipleChoiceFeedItem(props) {
   let [progress, setProgress] = React.useState(0)
 
   let gotItRight = undefined;
-  if (wordSelection !== null) gotItRight = (wordSelection === props.card.correctAnswer)
+  if (wordSelection !== null) gotItRight = (wordSelection === props.card.correct_answer)
 
   if (gotItRight) console.log("got it right")
 
@@ -191,7 +191,7 @@ function MultipleChoiceFeedItem(props) {
           <ClickableGloss
             id={props.card.id}
             arrangement={props.card.arrangement}
-            correctAnswer={props.card.correctAnswer}
+            correctAnswer={props.card.correct_answer}
             onClick={setWordSelection} gloss={props.card.randomizeOptions ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
         </Stack>
       </div>
@@ -316,15 +316,16 @@ function ClickableGloss(props) {
     return Math.max(0, (30 - (x.length - 6))) + "px"
   }
 
-  let recordAnswer = () => {
+  let recordAnswer = (answer) => {
     let fetchFrom = BACKEND_URL + "/feed-items/"+ props.id
 
     fetch(fetchFrom, {
       method: "PUT",
       headers: {
-       // 'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + window.localStorage.getItem('jwtToken'),
       },
+      body: JSON.stringify({answer})
     })
       .then(response => response.json())
       .then(response => {
@@ -342,7 +343,7 @@ function ClickableGloss(props) {
           key={i} onClick={() => {
             setWordSelection(x)
             props.onClick(x)
-            recordAnswer()
+            recordAnswer(x)
           }}>{x}</Button>
       })}</Stack>
 
@@ -357,7 +358,7 @@ function ClickableGloss(props) {
             key={i} onClick={() => {
               setWordSelection(x)
               props.onClick(x)
-              recordAnswer()
+              recordAnswer(x)
             }}>{x}</Button>
         </Grid>
       })}</Grid>
@@ -461,7 +462,7 @@ function Feed() {
 
       setTimeout(() => {
         //TODO: Fetch from our server: http://54.156.128.216:8080/feed-next
-        fetchData()
+        fetchData(3)
         //Re-enable scroll
         scrollableRef.current.removeEventListener("touchmove", disable, { passive: false })
 
