@@ -40,6 +40,12 @@ module.exports = async function (fastify, opts) {
   //      .whereBetween("rating", rating_range)
         .where("id", "not in", items_recently_done.map(o => o.feed_item_id))
         .limit(num)
+
+
+		for (let i = 0; i<items_in_range.length; i++){
+			let item=items_in_range[i]
+			let attempt=await AttemptsDAO.create({user_id:request.user.id, feed_item_id:item.id, success:null, attempt_time:new Date()})
+		}
     return items_in_range.map((item)=>{
        item.type = "MultipleChoiceFeedItem"
 
