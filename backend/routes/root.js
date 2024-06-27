@@ -55,7 +55,7 @@ module.exports = async function (fastify, opts) {
 					prompt: "Alphabet Practice",
        }
 
-       item.answerOptions = item.answer_options.split("$$$$$")
+       item.answer_options = item.answer_options.split("$$$$$")
 
        return item
     })
