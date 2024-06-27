@@ -2,6 +2,7 @@ CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) UNIQUE,
+    password_hash VARCHAR(255),
     profile_pic_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -17,9 +18,9 @@ CREATE TABLE user_ratings(
     user_id INT NOT NULL,
     category_id INT NOT NULL,
     rating INT NOT NULL DEFAULT 1000,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
-)
+);
 
 CREATE TABLE feed_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
