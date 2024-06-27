@@ -192,7 +192,7 @@ function MultipleChoiceFeedItem(props) {
             id={props.card.id}
             arrangement={props.card.arrangement}
             correctAnswer={props.card.correct_answer}
-            onClick={setWordSelection} gloss={props.card.randomize_options ? shuffle(props.card.answerOptions) : props.card.answerOptions} />
+            onClick={setWordSelection} gloss={props.card.randomize_options ? shuffle(props.card.answer_options) : props.card.answer_options} />
         </Stack>
       </div>
     </FeedCard>
