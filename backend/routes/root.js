@@ -32,7 +32,7 @@ module.exports = async function (fastify, opts) {
         .select("feed_item_id")
         .where({user_id:user.id})
         .orderBy("attempt_time", "desc") //Doen't matter, right?
-        .limit(10)  
+        //.limit(10)  
 
     let items_in_range      = 
       await knex("feed_items")
