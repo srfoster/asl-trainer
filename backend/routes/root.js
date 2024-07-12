@@ -27,18 +27,24 @@ module.exports = async function (fastify, opts) {
     let user       = request.user 
 //    let rating_range = rating_offsets.map(o => user.rating - o)
 
-    let items_recently_done = 
+    let items_to_exclude = 
       await knex("attempts")
-        .select("feed_item_id")
-        .where({user_id:user.id})
+        .select("*")
+        .where({user_id:user.id, most_recent_attempt:true})
         .orderBy("attempt_time", "desc") //Doen't matter, right?
         //.limit(10)  
+				
+		items_to_exclude = 
+			items_to_exclude.filter((i)=>{
+				return i.attempt_time.getTime()+i.cooldown_minutes*1000<new Date().getTime()
+			})
+
 
     let items_in_range      = 
       await knex("feed_items")
         .select("*")
   //      .whereBetween("rating", rating_range)
-        .where("id", "not in", items_recently_done.map(o => o.feed_item_id))
+        .where("id", "not in", items_to_exclude.map(o => o.feed_item_id))
         .limit(num)
 
 
@@ -59,28 +65,6 @@ module.exports = async function (fastify, opts) {
 
        return item
     })
-/*
-    let items_in_range      = 
-      await knex("feed_items")
-        .select("*")
-        .limit(3)
-
-    console.log(items_in_range)
-
-    return items_in_range.map((item)=>{
-       item.type = "MultipleChoiceFeedItem"
-
-       item.producer = {
-					username: "lalahep",
-					profile_pic_url:  "/profile-pics/laura.png",
-					prompt: "Alphabet Practice",
-       }
-
-       item.answerOptions = item.answer_options.split("$$$$$")
-
-       return item
-    })
-*/
   })
 
 
@@ -92,7 +76,21 @@ module.exports = async function (fastify, opts) {
         .select("*")
 				.where({id})
 				.first()
-		let attempt=await AttemptsDAO.create({user_id:request.user.id, feed_item_id:item.id, success: answer==item.correct_answer, attempt_time:new Date()})
+		let previous_attempt=
+      await knex("attempts")
+        .select("*")
+				.where({feed_item_id:id, most_recent_attempt:true})
+				.first()
+		let attempt=await AttemptsDAO.create({user_id:request.user.id, 
+																					feed_item_id:item.id, 
+																					success: answer==item.correct_answer, 
+																					attempt_time:new Date(),
+																					most_recent_attempt:true,
+																					cooldown_minutes:answer!=item.correct_answer?5:(previous_attempt?previous_attempt.cooldown_minutes*2:24*60)
+																				})
+		await knex("attempts")
+			.update({most_recent_attempt:false})
+			.where({id:previous_attempt.id})
 		console.log(id, request.user, answer, attempt, item)
     reply.send({})
 	})

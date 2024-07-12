@@ -46,6 +46,8 @@ CREATE TABLE attempts (
     feed_item_id INT NOT NULL,
     success BOOLEAN,
     attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		most_recent_attempt BOOLEAN NOT NULL DEFAULT 0,
+		cooldown_minutes INT,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (feed_item_id) REFERENCES feed_items(id)
 );
